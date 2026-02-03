@@ -1,17 +1,315 @@
----
 
 ---
+import Layout from '../layouts/Layout.astro';
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+const name = "Yueshan (Olivia) Zhang";
+const titleLine = "Researcher in Data Science & Statistics";
+const cvUrl = "/cv.pdf"; 
+---
+
+<Layout title={`${name} - Personal Website`}>
+  <div class="hero-wrapper">
+    <div class="hero-grid">
+      
+      <div class="hero-content">
+        <div class="intro-label">
+          <span class="accent-dot yellow"></span>
+          <span class="accent-dot coral"></span>
+          <span class="accent-dot mint"></span>
+          <span class="accent-dot sky"></span>
+        </div>
+
+        <h1>Hi, I'm <span class="highlight">{name}</span></h1>
+        <h2 class="subtitle">{titleLine}</h2>
+
+        <p class="bio">
+          My Chinese name is 张越珊. Friends call me “Dejiu” (得九) because 3×3=9, and the nickname stuck. I earned my B.S. from the
+          School of Mathematical Sciences at <strong>Nankai University</strong>, and in Spring 2025 I was a visiting student at
+          <strong>UC Berkeley</strong> for summer research. I’m currently applying to PhD programs in the U.S.
+          <br /><br />
+          My research interests include <strong>causal inference</strong> and <strong>AI for public health</strong>.
+          I’m also genuinely excited about new and modern AI tools.
+        </p>
+
+        <div class="cta-buttons">
+          <a href="/research" class="btn btn-primary">
+            <span>View Research</span>
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M4 10h12m-6-6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+
+          <a href={cvUrl} class="btn btn-cv" target="_blank" rel="noreferrer">
+              <span>View CV</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+          </a>
+
+          <a href="/contact" class="btn btn-secondary">Get in Touch</a>
+        </div>
+      </div>
+
+      <div class="hero-image">
+        <div class="image-placeholder">
+          <img class="avatar" src="/avatar.png" alt={name} />
+
+          <img class="floating-badge badge-1" src="/Chiikawa1.png" alt="sticker 1" loading="lazy" decoding="async" />
+          <img class="floating-badge badge-2" src="/Chiikawa2.png" alt="sticker 2" loading="lazy" decoding="async" />
+          <img class="floating-badge badge-3" src="/Chiikawa3.png" alt="sticker 3" loading="lazy" decoding="async" />
+        </div>
+      </div>
+
+    </div>
+  </div>
+</Layout>
+
+<style>
+  /* 核心布局 */
+  .hero-wrapper {
+    min-height: 85vh; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 2rem; 
+    max-width: 1280px; 
+    margin: 0 auto;
+    /* 修改：从 -4rem 改为 -1rem，稍微上移一点点即可，不要过度 */
+    margin-top: -2rem; 
+  }
+
+  .hero-grid {
+    display: grid;
+    /* 保持左宽右窄，给文字充足空间 */
+    grid-template-columns: 2.2fr 1fr; 
+    gap: 1rem; 
+    width: 100%;
+    align-items: center;
+  }
+
+  /* 左侧内容 */
+  .intro-label {
+    margin-bottom: 0.8rem;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .accent-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--dark);
+  }
+  .yellow { background: var(--yellow); }
+  .coral { background: var(--coral); }
+  .mint { background: var(--mint); }
+  .sky { background: var(--sky); }
+
+  .highlight {
+    position: relative;
+    display: inline-block;
+    white-space: nowrap; /* 强制不换行 */
+  }
+
+  .highlight::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: -4px;
+    right: -8px;
+    height: 14px;
+    background: var(--yellow);
+    z-index: -1;
+    transform: rotate(-1deg);
+    border-radius: 4px;
+    animation: fadeInUp 0.8s ease-out 0.4s both;
+  }
+
+  h1 {
+    /* 修改：调小最大字号 (3.8rem -> 3.2rem) 以确保一行能放下 */
+    font-size: clamp(2rem, 3.5vw, 3.2rem);
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.03em;
+    color: var(--dark);
+    line-height: 1.1;
+    /* 防止文字折行 */
+    white-space: nowrap; 
+  }
+
+  .subtitle {
+    color: var(--gray);
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    font-style: italic;
+    margin-bottom: 1.5rem;
+    font-family: serif;
+  }
+
+  .bio {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    animation: fadeInUp 0.8s ease-out 0.5s both;
+    max-width: 95%;
+    color: #333;
+  }
+
+  .bio strong {
+    color: var(--dark);
+    font-weight: 700;
+    border-bottom: 2px solid rgba(0,0,0,0.1);
+  }
+
+  /* CTA Buttons */
+  .cta-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    animation: fadeInUp 0.8s ease-out 0.6s both;
+  }
+
+  .btn {
+    padding: 0.7rem 1.4rem; /* 稍微缩小一点按钮，显得更精致 */
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-body);
+    border: 3px solid var(--dark);
+    box-shadow: 4px 4px 0 var(--dark);
+  }
+
+  .btn:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--dark);
+  }
+
+  .btn-primary { background: var(--coral); color: white; }
+  .btn-cv { background: var(--yellow); color: var(--dark); }
+  .btn-secondary { background: white; color: var(--dark); }
+  .btn-secondary:hover { background: #f0f0f0; }
+
+  /* 右侧图片区域 */
+  .hero-image {
+    position: relative;
+    animation: fadeInUp 0.8s ease-out 0.7s both;
+    display: flex;
+    justify-content: center;
+  }
+
+  .image-placeholder {
+    width: 100%;
+    max-width: 380px; /* 稍微调小图片最大宽度，给文字腾更多地 */
+    aspect-ratio: 1;
+    background: linear-gradient(135deg, var(--mint), var(--sky));
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    border: 4px solid var(--dark);
+    position: relative;
+    overflow: visible;
+    animation: morphing 8s ease-in-out infinite;
+    display: grid;
+    place-items: center;
+    box-shadow: 8px 8px 0 var(--dark);
+  }
+
+  @keyframes morphing {
+    0%, 100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+    50% { border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%; }
+  }
+
+  .image-placeholder::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 30% 30%, var(--yellow) 0%, transparent 50%),
+      radial-gradient(circle at 70% 70%, var(--coral) 0%, transparent 50%);
+    opacity: 0.25;
+    pointer-events: none;
+  }
+
+  .avatar {
+    width: 75%;
+    height: 75%;
+    object-fit: cover;
+    border-radius: 999px;
+    border: 4px solid var(--dark);
+    background: white;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* 贴纸动画 */
+  .floating-badge {
+    position: absolute;
+    z-index: 2;
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+    background: transparent;
+    pointer-events: none;
+    animation: floatBadge 3.5s ease-in-out infinite;
+    filter: drop-shadow(4px 4px 0 rgba(0,0,0,0.2));
+  }
+
+  .badge-1 { top: 0%; right: 5%; animation-delay: 0s; }
+  .badge-2 { bottom: 0%; right: 5%; animation-delay: 1.2s; }
+  .badge-3 { top: 45%; left: -5%; animation-delay: 2.4s; }
+
+  @keyframes floatBadge {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(8deg); }
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Responsive */
+  @media (max-width: 960px) {
+    .hero-wrapper {
+      padding: 2rem 1.5rem;
+      align-items: flex-start;
+      margin-top: 0; /* 移动端不需要负边距 */
+    }
+
+    .hero-grid {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+      text-align: center;
+    }
+    
+    .hero-image { order: -1; }
+
+    .image-placeholder {
+      max-width: 280px;
+      margin: 0 auto;
+    }
+
+    .cta-buttons {
+      justify-content: center;
+    }
+    
+    .intro-label {
+      justify-content: center;
+    }
+    
+    .bio {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    h1, .highlight {
+      white-space: normal; /* 移动端必须允许换行 */
+    }
+  }
+</style>

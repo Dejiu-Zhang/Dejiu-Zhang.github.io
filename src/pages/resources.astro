@@ -1,0 +1,568 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+/**
+ * 数据结构保持不变
+ */
+const undergradCourses = [
+{
+    name: "数理方程",
+    items: [
+      {
+        title: "期末背诵汇总",
+        pdfs: [
+          { label: "PDF", url: "/resources/pde/数理方程背诵范围.pdf" },
+        ],
+      },
+      {
+        title: "第二次小测",
+        pdfs: [
+          { label: "全面版", url: "/resources/pde/数理方程第二次小测.pdf" },
+          { label: "精简版", url: "/resources/pde/数理方程第二次小测（精简版）.pdf" },
+        ],
+        xmind: "/resources/pde/数理方程第二次小测.xmind",
+      },
+      {
+        title: "第一章 广义函数",
+        pdfs: [{ label: "PDF", url: "/resources/pde/第一章 广义函数.pdf" }],
+        xmind: "/resources/pde/广义函数.xmind",
+      },
+      {
+        title: "第二章 广义函数的卷积",
+        pdfs: [
+          { label: "PDF", url: "/resources/pde/第二章广义函数的卷积.pdf" },
+        ],
+        xmind: "/resources/pde/第二章 广义函数的卷积.xmind",
+      },
+      {
+        title: "第四章 Fourier 变换",
+        pdfs: [
+          { label: "PDF", url: "/resources/pde/第四章Fourier变换.pdf" },
+        ],
+        xmind: "/resources/pde/第四章 Fourier变换.xmind",
+      },
+      {
+        title: "第六章 Laplace 方程",
+        pdfs: [
+          { label: "复习版", url: "/resources/pde/第六章Laplace方程.pdf" },
+          { label: "期末版", url: "/resources/pde/第六章Laplace方程（期末版）.pdf" },
+        ],
+        xmind: "/resources/pde/第六章Laplace方程.xmind",
+      },
+      {
+        title: "第七章 抛物线方程",
+        pdfs: [
+          { label: "复习版", url: "/resources/pde/第七章抛物线方程.pdf" },
+          { label: "期末版", url: "/resources/pde/第七章抛物线方程（期末版）.pdf" },
+        ],
+        xmind: "/resources/pde/第七章抛物线方程(期末版).xmind",
+      },
+      {
+        title: "第八章 波动方程",
+        pdfs: [
+          { label: "复习版", url: "/resources/pde/第八章波动方程（复习版）.pdf" },
+          { label: "期末版", url: "/resources/pde/第八章波动方程.pdf" },
+        ],
+        xmind: "/resources/pde/第八章波动方程.xmind",
+      },
+    ],
+  }
+  ,
+  {
+    name: "实变函数",
+    items: [
+      {
+        title: "第一章 集合与实数集",
+        pdfs: [{ label: "PDF", url: "/resources/实变函数/第一章集合与实数集.pdf" }],
+        xmind: "/resources/实变函数/第一章集合与实数集.xmind",
+      },
+      {
+        title: "第二章 Lebesgue 测度",
+        pdfs: [{ label: "PDF", url: "/resources/实变函数/第二章 Lebesgue测度.pdf" }],
+        xmind: "/resources/实变函数/第二章 Lebesgue测度.xmind",
+      },
+      {
+        title: "第三章 可测函数",
+        pdfs: [{ label: "PDF", url: "/resources/实变函数/第三章可测函数.pdf" }],
+        xmind: "/resources/实变函数/第三章可测函数.xmind",
+      },
+      {
+        title: "第四章 Lebesgue 积分",
+        pdfs: [{ label: "PDF", url: "/resources/实变函数/第四章.pdf" }],
+        xmind: "/resources/实变函数/第四章 Lebesgue积分.xmind",
+      },
+      {
+        title: "第五章 微分和积分",
+        pdfs: [{ label: "PDF", url: "/resources/实变函数/第五章微分和积分.pdf" }],
+        xmind: "/resources/实变函数/第五章微分和积分.xmind",
+      },
+    ],
+  },
+  {
+    name: "复变函数",
+    items: [
+      {
+        title: "Section 2 解析函数",
+        pdfs: [{ label: "PDF", url: "/resources/复变函数/Section 2 解析函数.pdf" }],
+        xmind: "/resources/复变函数/Section 2 解析函数.xmind",
+      },
+      {
+        title: "Section 3 复积分、Cauchy 定理",
+        pdfs: [{ label: "PDF", url: "/resources/复变函数/Section3 复积分、Cauchy定理.pdf" }],
+        xmind: "/resources/复变函数/Section3 复积分、Cauchy 定理.xmind",
+      },
+      {
+        title: "Section 4 级数",
+        pdfs: [{ label: "PDF", url: "/resources/复变函数/Section4 级数.pdf" }],
+        xmind: "/resources/复变函数/Section4 级数.xmind",
+      },
+      {
+        title: "Section 6 共形映射",
+        pdfs: [{ label: "PDF", url: "/resources/复变函数/Section 6 共形映射.pdf" }],
+        xmind: "/resources/复变函数/Section 6 共形映射.xmind",
+      },
+    ],
+  },
+  {
+    name: "抽象代数",
+    items: [
+      {
+        title: "Section 1 群",
+        pdfs: [{ label: "PDF", url: "/resources/抽象代数/section1 group.pdf" }],
+        xmind: "/resources/抽象代数/section1 group.xmind",
+      },
+      {
+        title: "Section 2 环",
+        pdfs: [{ label: "PDF", url: "/resources/抽象代数/Section 2 Ring.pdf" }],
+        xmind: "/resources/抽象代数/Section 2 Ring.xmind",
+      },
+      {
+        title: "Section 4 域",
+        pdfs: [{ label: "PDF", url: "/resources/抽象代数/Section 4 field.pdf" }],
+        xmind: "/resources/抽象代数/Section 4 field.xmind",
+      },
+    ],
+  },
+  {
+    name: "数理统计",
+    items: [
+      {
+        title: "第一章 基本概念",
+        pdfs: [{ label: "PDF", url: "/resources/数理统计/数理统计第一章基本概念.pdf" }],
+        xmind: "/resources/数理统计/数理统计 第一章 基本概念.xmind",
+      },
+      {
+        title: "第二章 点估计",
+        pdfs: [{ label: "PDF", url: "/resources/数理统计/数理统计第二章点估计.pdf" }],
+        xmind: "/resources/数理统计/数理统计 第二章 点估计.xmind",
+      },
+      {
+        title: "第三章 区间估计",
+        pdfs: [{ label: "PDF", url: "/resources/数理统计/数理统计第三章区间估计.pdf" }],
+        xmind: "/resources/数理统计/数理统计第三章区间估计.xmind",
+      },
+    ],
+  },
+  {
+    name: "数值分析",
+    items: [
+      {
+        title: "函数基本逼近插值逼近&最佳逼近",
+        pdfs: [{ label: "PDF", url: "/resources/数值分析/函数基本逼近插值逼近最佳逼近.pdf" }],
+        xmind: "/resources/数值分析/插值逼近.xmind",
+      },
+      {
+        title: "数值积分与数值微分",
+        pdfs: [{ label: "PDF", url: "/resources/数值分析/数值积分数值微分.pdf" }],
+        xmind: "/resources/数值分析/数值积分数值微分.xmind",
+      },
+      {
+        title: "非线性方程的数值解法",
+        pdfs: [{ label: "PDF", url: "/resources/数值分析/非线性方程的数值解法.pdf" }],
+        xmind: "/resources/数值分析/第七章非线性方程的数值解法.xmind",
+      },
+    ],
+  },
+  {
+    name: "泛函分析",
+    items: [
+      {
+        title: "全部知识点梳理",
+        xmind: "/resources/泛函分析/functional analysis.xmind",
+      },
+    ],
+  },
+  {
+    name: "微分几何",
+    items: [
+      {
+        title: "全部知识点梳理",
+        pdfs: [{ label: "PDF", url: "/resources/微分几何/微分几何知识点梳理.pdf" }],
+        xmind: "/resources/微分几何/微分几何公式一览.xmind",
+      },
+    ],
+  },
+  {
+    name: "投资学",
+    items: [
+      {
+        title: "投资学",
+        pdfs: [{ label: "PDF", url: "/resources/投资学/投资学.pdf" }],
+        xmind: "/resources/投资学/投资学.xmind",
+      },
+    ],
+  },
+  {
+    name: "金融期权",
+    items: [
+      {
+        title: "金融期权",
+        pdfs: [{ label: "PDF", url: "/resources/金融期权/金融期权.pdf" }],
+        xmind: "/resources/金融期权/金融期权.xmind",
+      },
+    ],
+  },
+  {
+    name: "数学分析Ⅲ",
+    items: [
+      {
+        title: "第十四章 数项级数",
+        xmind: "/resources/数学分析三/第十四章 数项级数.xmind",
+      },
+      {
+        title: "第十五章 广义积分",
+        xmind: "/resources/数学分析三/第十五章 广义积分.xmind",
+      },
+      {
+        title: "第十六章 一致收敛",
+        xmind: "/resources/数学分析三/第十六章 一致收敛.xmind",
+      },
+      {
+        title: "第十七章 幂级数",
+        xmind: "/resources/数学分析三/第十七章 幂级数.xmind",
+      },
+      {
+        title: "第十八章 Fourier分析",
+        xmind: "/resources/数学分析三/第十八章 Fourier分析.xmind",
+      },
+      {
+        title: "第十九章 含参变量积分",
+        xmind: "/resources/数学分析三/第十九章 含参变量积分.xmind",
+      },
+    ],
+  },
+  {
+    name: "概率论",
+    items: [
+      {
+        title: "第三章 随机变量与分布函数",
+        pdfs: [{ label: "PDF", url: "/resources/概率论/第三章随机变量与分布函数.pdf" }],
+        xmind: "/resources/概率论/第三章随机变量与分布函数.xmind",
+      },
+      {
+        title: "第四章 数字特征与特征函数",
+        pdfs: [{ label: "PDF", url: "/resources/概率论/第四章数字特征与特征函数.pdf" }],
+        xmind: "/resources/概率论/第四章数字特征与特征函数.xmind",
+      },
+      {
+        title: "第五章 极限定理",
+        pdfs: [{ label: "PDF", url: "/resources/概率论/第五章极限定理.pdf" }],
+        xmind: "/resources/概率论/第五章极限定理.xmind",
+      },
+    ],
+  },
+  {
+    name: "常微分方程",
+    items: [
+      {
+        title: "第二章 一阶方程的解法",
+        pdfs: [{ label: "PDF", url: "/resources/ode/第二章 一阶方程的解法.pdf" }],
+        xmind: "/resources/ode/第二章 一阶方程的解法.xmind",
+      },
+    ],
+  },
+  {
+    name: "数值代数",
+    items: [
+      {
+        title: "期末重点",
+        pdfs: [{ label: "PDF", url: "/resources/数值代数/数值代数回顾.pdf" }],
+        xmind: "/resources/数值代数/数值代数回顾.xmind",
+      },
+    ],
+  },
+];
+
+const phdCourses = [];
+const otherCourses = [];
+
+const sections = [
+  { title: "Undergraduate Courses (Nankai University)", show: true, courses: undergradCourses },
+  { title: "PhD Courses", show: phdCourses.length > 0, courses: phdCourses },
+  { title: "Other", show: otherCourses.length > 0, courses: otherCourses },
+];
+
+function enc(url) {
+  return url
+    .split("/")
+    .map((seg, idx) => (idx === 0 ? seg : encodeURIComponent(seg)))
+    .join("/")
+    .replace(/%2F/g, "/");
+}
+---
+
+<Layout title="Resources - Yueshan (Olivia) Zhang">
+  <div class="page-container">
+    <header class="header">
+      <h1>Resources</h1>
+      <p class="sub">Notes and mind maps. Click to expand.</p>
+    </header>
+
+    {sections.filter((s) => s.show).map((section) => (
+      <section class="section">
+        <h2 class="section-title">{section.title}</h2>
+
+        <div class="accordion">
+          {section.courses.map((course) => (
+            <details class="course-card">
+              <summary class="card-header">
+                <span class="chev">▸</span>
+                <span class="course-title">{course.name}</span>
+                <span class="count">{course.items.length} items</span>
+              </summary>
+
+              <div class="card-body">
+                <div class="file-list">
+                  {course.items.map((item) => (
+                    <div class="file-row">
+                      <div class="file-name">{item.title}</div>
+                      <div class="file-actions">
+                        {/* PDF Links */}
+                        {(item.pdfs ?? []).map((p) => (
+                          <a href={enc(p.url)} target="_blank" class="res-link pdf">
+                            {p.label}
+                          </a>
+                        ))}
+                        {/* XMind Link */}
+                        {item.xmind ? (
+                          <a href={enc(item.xmind)} download class="res-link xmind">
+                            XMind
+                          </a>
+                        ) : null}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </details>
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+</Layout>
+
+<style>
+  /* >>> 核心：强制所有元素无动画 (Force No Animation) <<< */
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* 覆盖 details/summary 默认行为 */
+  details > summary {
+    list-style: none;
+  }
+  details > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  :root {
+    --text-main: #333;
+    --text-muted: #555;
+    --gray: #555;
+    --border-color: #e5e5e5;
+    --bg-hover: #f9fafb;
+    --link-blue: #2563eb;
+    --link-teal: #0d9488;
+  }
+
+  .page-container {
+    max-width: 900px;
+    margin: 0 auto;
+    /* 修改：顶部间距缩减 */
+    padding: 1rem 1.5rem 6rem;
+  }
+
+  /* Header 样式 - 对齐 Research */
+  .header {
+    text-align: center;
+    /* 修改：顶部间距缩减 */
+    margin-top: 0.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .header h1 {
+    margin-bottom: 0.8rem;
+    font-size: 3rem; /* 保持与 Research 一致 */
+    font-weight: 900;
+    letter-spacing: -0.05em;
+    color: #222;
+  }
+
+  .sub {
+    font-size: 1.3rem; /* 保持与 Research 一致 */
+    color: var(--gray);
+    font-style: italic;
+    font-family: serif;
+    margin: 0 auto;
+    max-width: 700px;
+  }
+
+  .section {
+    margin-bottom: 3rem;
+  }
+
+  /* Section 标题 */
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  /* Accordion Layout */
+  .accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .course-card {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: white;
+    overflow: hidden;
+  }
+
+  .course-card[open] {
+    border-color: #ccc;
+  }
+
+  .card-header {
+    cursor: pointer;
+    padding: 1rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: white;
+    user-select: none;
+  }
+
+  .card-header:hover {
+    background: var(--bg-hover);
+  }
+
+  .chev {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    display: inline-block;
+    width: 1rem;
+    text-align: center;
+    font-family: sans-serif;
+  }
+
+  /* 展开时箭头旋转 (无动画) */
+  details[open] .chev {
+    transform: rotate(90deg) !important;
+  }
+
+  .course-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--text-main);
+    flex: 1;
+  }
+
+  .count {
+    font-size: 0.85rem;
+    color: #888;
+    background: #f3f4f6;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-family: monospace;
+  }
+
+  .card-body {
+    padding: 0;
+    border-top: 1px solid var(--border-color);
+  }
+
+  /* File List Styles */
+  .file-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .file-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 1.2rem;
+    border-bottom: 1px solid #f5f5f5;
+  }
+
+  .file-row:last-child {
+    border-bottom: none;
+  }
+
+  .file-row:hover {
+    background: #fafafa;
+  }
+
+  .file-name {
+    font-size: 1rem;
+    color: #444;
+  }
+
+  .file-actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .res-link {
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 0.1rem 0;
+    border-bottom: 1px solid transparent;
+  }
+
+  .res-link.pdf {
+    color: #b91c1c;
+  }
+  .res-link.pdf:hover {
+    border-bottom-color: #b91c1c;
+  }
+
+  .res-link.xmind {
+    color: #0f766e;
+  }
+  .res-link.xmind:hover {
+    border-bottom-color: #0f766e;
+  }
+
+  @media (max-width: 600px) {
+    .file-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    .file-actions {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  }
+</style>

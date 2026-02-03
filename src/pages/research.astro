@@ -1,0 +1,325 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const papers = [
+  {
+    title: "Congestion Pricing in New York City: Effects on Ride-Hailing and Transit",
+    status: "Revision and Resubmit",
+    statusColor: "coral", 
+    description: "Estimated causal impacts of NYC’s $1.50 per-trip congestion charge on Uber, Lyft, and subway ridership using a two-way fixed effects design with high-frequency panel data. Leveraged Lyft’s temporary $1.50 rider credit in Jan 2025 as a quasi-experiment to separate toll effects from competitive responses.",
+    meta: [
+      "📅 2025",
+      "📄 Transportation Research Part A"
+    ],
+    advisor: "Prof. Manxi Wu",
+    advisorUrl: "https://sites.google.com/view/manxi-wu/home"
+  },
+  {
+    title: "Where Do Adolescent Digital Twins Succeed and Fail?",
+    subtitle: "A Multi-layer Validation of Survey-Anchored Generative Agents",
+    status: "In Preparation",
+    statusColor: "mint", 
+    description: "We build survey-anchored adolescent “digital twins” from the 2023 YRBS and add narrative memory retrieved from real youth videos via retrieval-augmented generation. We evaluate realism across four checks (profile agreement, held-out domains, association networks, and live chats with 18–19-year-old participants at UC Berkeley), and we run in-silico replications of 10 published adolescent RCTs.",
+    meta: [
+      "📅 2026",
+      "🎯 Target: Nature Human Behavior"
+    ],
+    advisor: "Prof. Jingshen Wang",
+    advisorUrl: "https://sites.google.com/berkeley.edu/jingshenwang/"
+  }
+];
+
+const projects = [
+  {
+    title: "Sentiment-Driven Crypto Pricing",
+    description: "Integrated Transformer models with Graph Neural Networks (GNNs) to predict crypto returns, incorporating sentiment analysis and liquidity factors.",
+    tags: ["Deep Learning", "Quantitative Finance"],
+    colorClass: "yellow" 
+  }
+];
+---
+
+<Layout title="Research - Yueshan Zhang">
+    <div class="page-container">
+        <div class="page-header">
+            <h1>Research</h1>
+            <p class="subtitle">Exploring Causal Inference, AI Agents, and Social Computing</p>
+        </div>
+        
+        <section class="research-areas">
+            {papers.map((paper) => (
+                <div class="area-card">
+                    <div class={`area-tag ${paper.statusColor}`}>{paper.status}</div>
+                    <h2>{paper.title}</h2>
+                    {paper.subtitle && <h3 class="paper-sub">{paper.subtitle}</h3>}
+                    
+                    <p class="area-description">
+                        {paper.description}
+                    </p>
+                    
+                    <div class="area-meta">
+                        {paper.meta.map((item) => (
+                            <span class="meta-item">{item}</span>
+                        ))}
+                        <span class="meta-item">
+                            👥 Advisor: 
+                            <a href={paper.advisorUrl} target="_blank" rel="noreferrer" class="advisor-link">
+                                {paper.advisor}
+                            </a>
+                        </span>
+                    </div>
+                </div>
+            ))}
+        </section>
+        
+        <section class="projects">
+            <h2>Selected Projects</h2>
+            <div class="projects-grid">
+                {projects.map((proj) => (
+                    <div class={`project-card ${proj.colorClass}`}>
+                        <div class="project-header">
+                            <h3>{proj.title}</h3>
+                        </div>
+                        <p>{proj.description}</p>
+                        <div class="project-tags">
+                            {proj.tags.map((tag) => (
+                                <span class="tag">{tag}</span>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </section>
+    </div>
+</Layout>
+
+<style is:global>
+    body {
+        background-color: #ffffff !important;
+    }
+</style>
+
+<style>
+    :root {
+        --dark: #222;
+        --gray: #555;
+        --cream: #f9f9f9;
+        --coral: #ff6b6b;
+        --mint: #4ecdc4;
+        --yellow: #ffe66d;
+        --purple: #9b5de5;
+        --sky: #62b6cb;
+    }
+
+    /* >>> 核心：强制所有元素无动画 <<< */
+    .page-container, .page-header, h1, h2, h3, p, a, .area-card, .project-card, .area-tag {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+
+    /* 仅保留卡片和链接的 Hover 简单变色/位移 */
+    .area-card:hover, .project-card:hover {
+        transform: translate(-4px, -4px) !important;
+        box-shadow: 12px 12px 0 var(--dark) !important;
+    }
+
+    .advisor-link:hover {
+        background: var(--coral);
+        color: white;
+    }
+
+    .page-container {
+        max-width: 900px;
+        /* 修改：顶部间距缩减，与 Contact/Resources 保持一致 */
+        margin: 1rem auto 5rem auto;
+        padding: 0 1rem;
+    }
+
+    .page-header {
+        text-align: center;
+        /* 修改：顶部间距缩减 */
+        margin-top: 0.5rem;
+        margin-bottom: 3rem;
+    }
+    
+    .page-header h1 {
+        margin-bottom: 0.8rem;
+        font-size: 3rem;
+        font-weight: 900;
+        letter-spacing: -0.05em;
+        color: var(--dark);
+    }
+    
+    .subtitle {
+        font-size: 1.3rem;
+        color: var(--gray);
+        font-style: italic;
+        font-family: serif;
+        margin: 0 auto;
+        max-width: 700px;
+    }
+    
+    /* Research Areas (Papers) */
+    .research-areas {
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+        margin-bottom: 6rem;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .area-card {
+        background: white;
+        padding: 3rem;
+        border-radius: 25px;
+        border: 3px solid var(--dark);
+        box-shadow: 8px 8px 0 var(--dark);
+        position: relative;
+    }
+    
+    .area-tag {
+        display: inline-block;
+        background: var(--dark);
+        color: white;
+        padding: 0.5rem 1.5rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+        font-family: monospace;
+        text-transform: uppercase;
+        border: 2px solid var(--dark);
+    }
+    
+    .area-tag.coral {
+        background: var(--coral);
+        color: white;
+    }
+    
+    .area-tag.mint {
+        background: var(--mint);
+        color: var(--dark);
+    }
+    
+    .area-card h2 {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+        font-weight: 800;
+        line-height: 1.2;
+    }
+
+    .paper-sub {
+        font-size: 1.2rem;
+        color: var(--gray);
+        margin-bottom: 1.5rem;
+        font-weight: 500;
+    }
+    
+    .area-description {
+        font-size: 1.1rem;
+        line-height: 1.7;
+        margin-bottom: 2rem;
+        color: var(--dark);
+    }
+    
+    .area-meta {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        border-top: 2px dashed #ddd;
+        padding-top: 1.5rem;
+    }
+    
+    .meta-item {
+        font-family: monospace;
+        font-size: 0.95rem;
+        color: var(--gray);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .advisor-link {
+        color: var(--dark);
+        font-style: italic;
+        font-weight: 700;
+        text-decoration: none;
+        border-bottom: 2px solid var(--coral);
+    }
+    
+    /* Projects Section */
+    .projects {
+        margin-bottom: 6rem;
+        max-width: 1000px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .projects h2 {
+        text-align: center;
+        margin-bottom: 3rem;
+        font-size: 2rem;
+        font-weight: 800;
+    }
+    
+    .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+    
+    .project-card {
+        padding: 2rem;
+        border-radius: 20px;
+        border: 3px solid var(--dark);
+        box-shadow: 4px 4px 0 var(--dark);
+    }
+
+    .project-card.yellow { background: var(--yellow); }
+    .project-card.mint { background: var(--mint); }
+    .project-card.sky { background: var(--sky); }
+    
+    .project-header h3 {
+        font-size: 1.4rem;
+        margin: 0 0 1rem 0;
+        font-weight: 800;
+    }
+    
+    .project-card p {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+        color: var(--dark);
+        line-height: 1.5;
+    }
+    
+    .project-tags {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .tag {
+        background: white;
+        color: var(--dark);
+        padding: 0.3rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        font-family: monospace;
+        border: 2px solid var(--dark);
+    }
+
+    @media (max-width: 768px) {
+        .area-card {
+            padding: 2rem;
+        }
+        .area-meta {
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+    }
+</style>
