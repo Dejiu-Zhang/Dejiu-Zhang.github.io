@@ -55,11 +55,11 @@ const cvUrl = "/cv.pdf";
 
       <div class="hero-image">
         <div class="image-placeholder">
-          <img class="avatar" src="/avatar.png" alt={name} loading="eager" />
+          <img class="avatar" src="/avatar.png" alt={name} />
 
-          <img class="floating-badge badge-1" src="/Chiikawa1.png" alt="sticker 1" loading="eager" />
-          <img class="floating-badge badge-2" src="/Chiikawa2.png" alt="sticker 2" loading="eager" />
-          <img class="floating-badge badge-3" src="/Chiikawa3.png" alt="sticker 3" loading="eager" />
+          <img class="floating-badge badge-1" src="/Chiikawa1.png" alt="sticker 1" />
+          <img class="floating-badge badge-2" src="/Chiikawa2.png" alt="sticker 2" />
+          <img class="floating-badge badge-3" src="/Chiikawa3.png" alt="sticker 3" />
         </div>
       </div>
 
@@ -269,30 +269,18 @@ const cvUrl = "/cv.pdf";
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* Tablet 响应式 (增加中等屏幕断点) */
-  @media (max-width: 1024px) {
-    .hero-grid {
-      grid-template-columns: 1.5fr 1fr;
-      gap: 2rem;
-    }
-    
-    .image-placeholder {
-      max-width: 320px;
-    }
-  }
-
-  /* 手机响应式 - 关键修复 */
+  /* 手机响应式 - 保持所有样式 */
   @media (max-width: 768px) {
     .hero-wrapper {
-      padding: 2rem 1.5rem;
+      padding: 1.5rem 1.25rem;
       align-items: flex-start;
-      margin-top: 0;
+      margin-top: 1rem;
       min-height: auto;
     }
 
     .hero-grid {
       grid-template-columns: 1fr;
-      gap: 3rem;
+      gap: 2.5rem;
       text-align: center;
     }
     
@@ -302,21 +290,62 @@ const cvUrl = "/cv.pdf";
       width: 100%;
     }
 
+    /* 保持图片容器的所有样式 */
     .image-placeholder {
-      max-width: 280px;
+      max-width: 300px;
       margin: 0 auto;
+      /* 保留所有视觉样式 */
+      background: linear-gradient(135deg, var(--mint), var(--sky));
+      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+      border: 4px solid var(--dark);
       box-shadow: 6px 6px 0 var(--dark);
+      animation: morphing 8s ease-in-out infinite;
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: visible;
     }
 
+    /* 保持渐变背景 */
+    .image-placeholder::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 30% 30%, var(--yellow) 0%, transparent 50%),
+        radial-gradient(circle at 70% 70%, var(--coral) 0%, transparent 50%);
+      opacity: 0.25;
+      pointer-events: none;
+    }
+
+    /* 保持头像样式 */
     .avatar {
       width: 70%;
       height: 70%;
+      object-fit: cover;
+      border-radius: 999px;
+      border: 4px solid var(--dark);
+      background: white;
+      position: relative;
+      z-index: 1;
     }
 
+    /* 保持贴纸但缩小 */
     .floating-badge {
       width: 70px;
       height: 70px;
+      position: absolute;
+      z-index: 2;
+      object-fit: contain;
+      background: transparent;
+      pointer-events: none;
+      animation: floatBadge 3.5s ease-in-out infinite;
+      filter: drop-shadow(4px 4px 0 rgba(0,0,0,0.2));
     }
+
+    .badge-1 { top: -5%; right: 0%; animation-delay: 0s; }
+    .badge-2 { bottom: -5%; right: 0%; animation-delay: 1.2s; }
+    .badge-3 { top: 40%; left: -8%; animation-delay: 2.4s; }
 
     .cta-buttons {
       justify-content: center;
@@ -341,7 +370,7 @@ const cvUrl = "/cv.pdf";
     
     h1 {
       white-space: normal;
-      font-size: clamp(1.8rem, 6vw, 2.5rem);
+      font-size: clamp(1.75rem, 6vw, 2.5rem);
     }
 
     .highlight {
@@ -349,14 +378,14 @@ const cvUrl = "/cv.pdf";
     }
 
     .subtitle {
-      font-size: clamp(0.95rem, 4vw, 1.1rem);
+      font-size: clamp(0.95rem, 4vw, 1.15rem);
     }
   }
 
   /* 小屏手机优化 */
   @media (max-width: 480px) {
     .hero-wrapper {
-      padding: 1.5rem 1rem;
+      padding: 1.25rem 1rem;
     }
 
     .hero-grid {
@@ -364,7 +393,7 @@ const cvUrl = "/cv.pdf";
     }
 
     .image-placeholder {
-      max-width: 240px;
+      max-width: 260px;
     }
 
     .floating-badge {
@@ -373,14 +402,7 @@ const cvUrl = "/cv.pdf";
     }
 
     .cta-buttons {
-      flex-direction: column;
-      width: 100%;
       gap: 0.75rem;
-    }
-
-    .btn {
-      width: 100%;
-      justify-content: center;
     }
 
     h1 {
