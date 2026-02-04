@@ -12,7 +12,7 @@ const links = [
   { url: "https://github.com/Dejiu-Zhang", kind: "github", label: "GitHub" },
   { url: "https://www.linkedin.com/in/yueshan-zhang-804782392/", kind: "linkedin", label: "LinkedIn" },
   { url: "https://www.instagram.com/zhangdejiu9", kind: "instagram", label: "Instagram" },
-  { url: "https://orcid.org/0009-0005-8737-0702", kind: "orcid", label: "ORCID" },
+  { url: "https://scholar.google.com/citations?hl=en&user=uGJCTdgAAAAJ", kind: "scholar", label: "Google Scholar" },
 ];
 ---
 
@@ -23,7 +23,6 @@ const links = [
       <p class="intro">Email is best. I usually reply within 1–2 days.</p>
     </header>
 
-    {/* 1. Email */}
     <section class="section emails">
       <h2>Email</h2>
       <div class="email-list">
@@ -40,30 +39,41 @@ const links = [
 
     <hr class="divider" />
 
-    {/* 2. Social Icons */}
     <section class="section socials">
       <h2>Online</h2>
       <div class="icons-row">
         {links.map((l) => (
-          <a href={l.url} target="_blank" rel="noreferrer" class={`icon-link ${l.kind}`} aria-label={l.label}>
+          <a
+            href={l.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class={`icon-link ${l.kind}`}
+            aria-label={l.label}
+            title={l.label}
+          >
             {l.kind === "github" && (
               <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
               </svg>
             )}
+
             {l.kind === "linkedin" && (
               <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
               </svg>
             )}
+
             {l.kind === "instagram" && (
               <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9zm10.75 1.75a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
               </svg>
             )}
-            {l.kind === "orcid" && (
+
+            {l.kind === "scholar" && (
               <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zM7.33 6.06c.6 0 1.087.487 1.087 1.087S7.93 8.234 7.33 8.234 6.243 7.747 6.243 7.147 6.73 6.06 7.33 6.06zm-.88 3.06h1.76v8.82H6.45V9.12zm4.05 0h1.35v1.2h.03c.37-.72 1.27-1.42 2.62-1.42 2.8 0 3.32 1.84 3.32 4.22v4.82h-1.76v-4.28c0-1.02-.02-2.33-1.42-2.33-1.42 0-1.64 1.11-1.64 2.26v4.35h-1.76V9.12z"/>
+                {/* 简化的学术帽 + 书页图标（自定义，不会像LinkedIn） */}
+                <path d="M12 3 1.5 8.25 12 13.5 22.5 8.25 12 3zm0 12.2L4.5 10.9V16c0 .9.5 1.7 1.3 2.1 1.7.9 3.8 1.4 6.2 1.4s4.5-.5 6.2-1.4c.8-.4 1.3-1.2 1.3-2.1v-5.1L12 15.2z"/>
+                <path d="M19.5 10.5v6.2c0 .3.2.6.5.7l1 .4v-7.7l-1.5.4z" opacity="0.65"/>
               </svg>
             )}
           </a>
@@ -81,15 +91,14 @@ const links = [
     --dark: #222;
   }
 
-  /* 核心：强制所有元素无动画 */
-  .page-header, h1, h2, p, a, svg, .divider, .email-row, .icons-row {
+  /* 强制无动画 */
+  .page-header, h1, h2, p, a, svg, img, .divider, .email-row, .icons-row {
     animation: none !important;
     transform: none !important;
     opacity: 1 !important;
     transition: none !important;
   }
 
-  /* 只有鼠标悬停时的简单变色可以保留 */
   a:hover, .icon-link:hover, .email-link:hover {
     transition: color 0.1s ease !important;
   }
@@ -148,7 +157,6 @@ const links = [
     opacity: 0.12;
   }
 
-  /* Email 样式 */
   .email-list {
     display: flex;
     flex-direction: column;
@@ -188,7 +196,6 @@ const links = [
     font-weight: 700;
   }
 
-  /* 图标样式：整体放大 */
   .icons-row {
     display: flex;
     justify-content: center;
@@ -208,7 +215,7 @@ const links = [
   }
 
   .icon-link:hover {
-    color: black;
+    color: #000;
   }
 
   .icon {
