@@ -22,12 +22,12 @@ const cvUrl = "/cv.pdf";
         <h2 class="subtitle">{titleLine}</h2>
 
         <p class="bio">
-          My Chinese name is 张越珊. Friends call me "Dejiu" (得九) because 3×3=9, and the nickname stuck. I earned my B.S. from the
+          My Chinese name is 张越珊. Friends call me “Dejiu” (得九) because 3×3=9, and the nickname stuck. I earned my B.S. from the
           School of Mathematical Sciences at <strong>Nankai University</strong>, and in Spring 2025 I was a visiting student at
-          <strong>UC Berkeley</strong> for summer research. I'm currently applying to PhD programs in the U.S.
+          <strong>UC Berkeley</strong> for summer research. I’m currently applying to PhD programs in the U.S.
           <br /><br />
           My research interests include <strong>causal inference</strong> and <strong>AI for public health</strong>.
-          I'm also genuinely excited about new and modern AI tools.
+          I’m also genuinely excited about new and modern AI tools.
         </p>
 
         <div class="cta-buttons">
@@ -57,9 +57,9 @@ const cvUrl = "/cv.pdf";
         <div class="image-placeholder">
           <img class="avatar" src="/avatar.png" alt={name} />
 
-          <img class="floating-badge badge-1" src="/Chiikawa1.png" alt="sticker 1" />
-          <img class="floating-badge badge-2" src="/Chiikawa2.png" alt="sticker 2" />
-          <img class="floating-badge badge-3" src="/Chiikawa3.png" alt="sticker 3" />
+          <img class="floating-badge badge-1" src="/Chiikawa1.png" alt="sticker 1" loading="lazy" decoding="async" />
+          <img class="floating-badge badge-2" src="/Chiikawa2.png" alt="sticker 2" loading="lazy" decoding="async" />
+          <img class="floating-badge badge-3" src="/Chiikawa3.png" alt="sticker 3" loading="lazy" decoding="async" />
         </div>
       </div>
 
@@ -77,11 +77,13 @@ const cvUrl = "/cv.pdf";
     padding: 0 2rem; 
     max-width: 1280px; 
     margin: 0 auto;
+    /* 修改：从 -4rem 改为 -1rem，稍微上移一点点即可，不要过度 */
     margin-top: -2rem; 
   }
 
   .hero-grid {
     display: grid;
+    /* 保持左宽右窄，给文字充足空间 */
     grid-template-columns: 2.2fr 1fr; 
     gap: 1rem; 
     width: 100%;
@@ -109,7 +111,7 @@ const cvUrl = "/cv.pdf";
   .highlight {
     position: relative;
     display: inline-block;
-    white-space: nowrap;
+    white-space: nowrap; /* 强制不换行 */
   }
 
   .highlight::after {
@@ -127,12 +129,14 @@ const cvUrl = "/cv.pdf";
   }
 
   h1 {
+    /* 修改：调小最大字号 (3.8rem -> 3.2rem) 以确保一行能放下 */
     font-size: clamp(2rem, 3.5vw, 3.2rem);
     font-weight: 900;
     margin-bottom: 0.5rem;
     letter-spacing: -0.03em;
     color: var(--dark);
     line-height: 1.1;
+    /* 防止文字折行 */
     white-space: nowrap; 
   }
 
@@ -168,7 +172,7 @@ const cvUrl = "/cv.pdf";
   }
 
   .btn {
-    padding: 0.7rem 1.4rem;
+    padding: 0.7rem 1.4rem; /* 稍微缩小一点按钮，显得更精致 */
     border-radius: 50px;
     text-decoration: none;
     font-weight: 700;
@@ -202,7 +206,7 @@ const cvUrl = "/cv.pdf";
 
   .image-placeholder {
     width: 100%;
-    max-width: 380px;
+    max-width: 380px; /* 稍微调小图片最大宽度，给文字腾更多地 */
     aspect-ratio: 1;
     background: linear-gradient(135deg, var(--mint), var(--sky));
     border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
@@ -269,92 +273,29 @@ const cvUrl = "/cv.pdf";
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* 手机响应式 - 保持所有样式 */
-  @media (max-width: 768px) {
+  /* Responsive */
+  @media (max-width: 960px) {
     .hero-wrapper {
-      padding: 1.5rem 1.25rem;
+      padding: 2rem 1.5rem;
       align-items: flex-start;
-      margin-top: 1rem;
-      min-height: auto;
+      margin-top: 0; /* 移动端不需要负边距 */
     }
 
     .hero-grid {
       grid-template-columns: 1fr;
-      gap: 2.5rem;
+      gap: 3rem;
       text-align: center;
     }
     
-    /* 图片放到上方 */
-    .hero-image { 
-      order: -1;
-      width: 100%;
-    }
+    .hero-image { order: -1; }
 
-    /* 保持图片容器的所有样式 */
     .image-placeholder {
-      max-width: 300px;
+      max-width: 280px;
       margin: 0 auto;
-      /* 保留所有视觉样式 */
-      background: linear-gradient(135deg, var(--mint), var(--sky));
-      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-      border: 4px solid var(--dark);
-      box-shadow: 6px 6px 0 var(--dark);
-      animation: morphing 8s ease-in-out infinite;
-      display: grid;
-      place-items: center;
-      position: relative;
-      overflow: visible;
     }
-
-    /* 保持渐变背景 */
-    .image-placeholder::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 30% 30%, var(--yellow) 0%, transparent 50%),
-        radial-gradient(circle at 70% 70%, var(--coral) 0%, transparent 50%);
-      opacity: 0.25;
-      pointer-events: none;
-    }
-
-    /* 保持头像样式 */
-    .avatar {
-      width: 70%;
-      height: 70%;
-      object-fit: cover;
-      border-radius: 999px;
-      border: 4px solid var(--dark);
-      background: white;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* 保持贴纸但缩小 */
-    .floating-badge {
-      width: 70px;
-      height: 70px;
-      position: absolute;
-      z-index: 2;
-      object-fit: contain;
-      background: transparent;
-      pointer-events: none;
-      animation: floatBadge 3.5s ease-in-out infinite;
-      filter: drop-shadow(4px 4px 0 rgba(0,0,0,0.2));
-    }
-
-    .badge-1 { top: -5%; right: 0%; animation-delay: 0s; }
-    .badge-2 { bottom: -5%; right: 0%; animation-delay: 1.2s; }
-    .badge-3 { top: 40%; left: -8%; animation-delay: 2.4s; }
 
     .cta-buttons {
       justify-content: center;
-      width: 100%;
-    }
-
-    .btn {
-      padding: 0.65rem 1.2rem;
-      font-size: 0.85rem;
     }
     
     .intro-label {
@@ -364,55 +305,10 @@ const cvUrl = "/cv.pdf";
     .bio {
       margin-left: auto;
       margin-right: auto;
-      font-size: 1rem;
-      max-width: 100%;
     }
     
-    h1 {
-      white-space: normal;
-      font-size: clamp(1.75rem, 6vw, 2.5rem);
-    }
-
-    .highlight {
-      white-space: normal;
-    }
-
-    .subtitle {
-      font-size: clamp(0.95rem, 4vw, 1.15rem);
-    }
-  }
-
-  /* 小屏手机优化 */
-  @media (max-width: 480px) {
-    .hero-wrapper {
-      padding: 1.25rem 1rem;
-    }
-
-    .hero-grid {
-      gap: 2rem;
-    }
-
-    .image-placeholder {
-      max-width: 260px;
-    }
-
-    .floating-badge {
-      width: 60px;
-      height: 60px;
-    }
-
-    .cta-buttons {
-      gap: 0.75rem;
-    }
-
-    h1 {
-      font-size: clamp(1.5rem, 7vw, 2rem);
-      line-height: 1.2;
-    }
-
-    .bio {
-      font-size: 0.95rem;
-      line-height: 1.6;
+    h1, .highlight {
+      white-space: normal; /* 移动端必须允许换行 */
     }
   }
 </style>
