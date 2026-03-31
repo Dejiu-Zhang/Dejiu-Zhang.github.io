@@ -1,315 +1,1281 @@
 ---
-import Layout from '../layouts/Layout.astro';
+function enc(url: string) {
+  return url.split("/").map((seg, idx) => (idx === 0 ? seg : encodeURIComponent(seg))).join("/").replace(/%2F/g, "/");
+}
 
-const name = "Yueshan (Olivia) Zhang";
-const titleLine = "Researcher in Data Science & Statistics";
-const cvUrl = "/cv.pdf"; 
+const undergradCourses = [
+  { name: "数理方程", en: "Mathematical Physics", items: [
+    { title: "期末背诵汇总", pdfs: [{ label: "PDF", url: "/resources/pde/数理方程背诵范围.pdf" }] },
+    { title: "第二次小测", pdfs: [{ label: "全面版", url: "/resources/pde/数理方程第二次小测.pdf" }, { label: "精简版", url: "/resources/pde/数理方程第二次小测（精简版）.pdf" }], xmind: "/resources/pde/数理方程第二次小测.xmind" },
+    { title: "第一章 广义函数", pdfs: [{ label: "PDF", url: "/resources/pde/第一章 广义函数.pdf" }], xmind: "/resources/pde/广义函数.xmind" },
+    { title: "第二章 广义函数的卷积", pdfs: [{ label: "PDF", url: "/resources/pde/第二章广义函数的卷积.pdf" }], xmind: "/resources/pde/第二章 广义函数的卷积.xmind" },
+    { title: "第四章 Fourier 变换", pdfs: [{ label: "PDF", url: "/resources/pde/第四章Fourier变换.pdf" }], xmind: "/resources/pde/第四章 Fourier变换.xmind" },
+    { title: "第六章 Laplace 方程", pdfs: [{ label: "复习版", url: "/resources/pde/第六章Laplace方程.pdf" }, { label: "期末版", url: "/resources/pde/第六章Laplace方程（期末版）.pdf" }], xmind: "/resources/pde/第六章Laplace方程.xmind" },
+    { title: "第七章 抛物线方程", pdfs: [{ label: "复习版", url: "/resources/pde/第七章抛物线方程.pdf" }, { label: "期末版", url: "/resources/pde/第七章抛物线方程（期末版）.pdf" }], xmind: "/resources/pde/第七章抛物线方程(期末版).xmind" },
+    { title: "第八章 波动方程", pdfs: [{ label: "复习版", url: "/resources/pde/第八章波动方程（复习版）.pdf" }, { label: "期末版", url: "/resources/pde/第八章波动方程.pdf" }], xmind: "/resources/pde/第八章波动方程.xmind" },
+  ]},
+  { name: "实变函数", en: "Real Analysis", items: [
+    { title: "第一章 集合与实数集", pdfs: [{ label: "PDF", url: "/resources/实变函数/第一章集合与实数集.pdf" }], xmind: "/resources/实变函数/第一章集合与实数集.xmind" },
+    { title: "第二章 Lebesgue 测度", pdfs: [{ label: "PDF", url: "/resources/实变函数/第二章 Lebesgue测度.pdf" }], xmind: "/resources/实变函数/第二章 Lebesgue测度.xmind" },
+    { title: "第三章 可测函数", pdfs: [{ label: "PDF", url: "/resources/实变函数/第三章可测函数.pdf" }], xmind: "/resources/实变函数/第三章可测函数.xmind" },
+    { title: "第四章 Lebesgue 积分", pdfs: [{ label: "PDF", url: "/resources/实变函数/第四章.pdf" }], xmind: "/resources/实变函数/第四章 Lebesgue积分.xmind" },
+    { title: "第五章 微分和积分", pdfs: [{ label: "PDF", url: "/resources/实变函数/第五章微分和积分.pdf" }], xmind: "/resources/实变函数/第五章微分和积分.xmind" },
+  ]},
+  { name: "复变函数", en: "Complex Analysis", items: [
+    { title: "Section 2 解析函数", pdfs: [{ label: "PDF", url: "/resources/复变函数/Section 2 解析函数.pdf" }], xmind: "/resources/复变函数/Section 2 解析函数.xmind" },
+    { title: "Section 3 复积分、Cauchy 定理", pdfs: [{ label: "PDF", url: "/resources/复变函数/Section3 复积分、Cauchy定理.pdf" }], xmind: "/resources/复变函数/Section3 复积分、Cauchy 定理.xmind" },
+    { title: "Section 4 级数", pdfs: [{ label: "PDF", url: "/resources/复变函数/Section4 级数.pdf" }], xmind: "/resources/复变函数/Section4 级数.xmind" },
+    { title: "Section 6 共形映射", pdfs: [{ label: "PDF", url: "/resources/复变函数/Section 6 共形映射.pdf" }], xmind: "/resources/复变函数/Section 6 共形映射.xmind" },
+  ]},
+  { name: "抽象代数", en: "Abstract Algebra", items: [
+    { title: "Section 1 群", pdfs: [{ label: "PDF", url: "/resources/抽象代数/section1 group.pdf" }], xmind: "/resources/抽象代数/section1 group.xmind" },
+    { title: "Section 2 环", pdfs: [{ label: "PDF", url: "/resources/抽象代数/Section 2 Ring.pdf" }], xmind: "/resources/抽象代数/Section 2 Ring.xmind" },
+    { title: "Section 4 域", pdfs: [{ label: "PDF", url: "/resources/抽象代数/Section 4 field.pdf" }], xmind: "/resources/抽象代数/Section 4 field.xmind" },
+  ]},
+  { name: "数理统计", en: "Mathematical Statistics", items: [
+    { title: "第一章 基本概念", pdfs: [{ label: "PDF", url: "/resources/数理统计/数理统计第一章基本概念.pdf" }], xmind: "/resources/数理统计/数理统计 第一章 基本概念.xmind" },
+    { title: "第二章 点估计", pdfs: [{ label: "PDF", url: "/resources/数理统计/数理统计第二章点估计.pdf" }], xmind: "/resources/数理统计/数理统计 第二章 点估计.xmind" },
+    { title: "第三章 区间估计", pdfs: [{ label: "PDF", url: "/resources/数理统计/数理统计第三章区间估计.pdf" }], xmind: "/resources/数理统计/数理统计第三章区间估计.xmind" },
+  ]},
+  { name: "数值分析", en: "Numerical Analysis", items: [
+    { title: "函数基本逼近·插值逼近&最佳逼近", pdfs: [{ label: "PDF", url: "/resources/数值分析/函数基本逼近插值逼近最佳逼近.pdf" }], xmind: "/resources/数值分析/插值逼近.xmind" },
+    { title: "数值积分与数值微分", pdfs: [{ label: "PDF", url: "/resources/数值分析/数值积分数值微分.pdf" }], xmind: "/resources/数值分析/数值积分数值微分.xmind" },
+    { title: "非线性方程的数值解法", pdfs: [{ label: "PDF", url: "/resources/数值分析/非线性方程的数值解法.pdf" }], xmind: "/resources/数值分析/第七章非线性方程的数值解法.xmind" },
+  ]},
+  { name: "泛函分析", en: "Functional Analysis", items: [
+    { title: "全部知识点梳理", xmind: "/resources/泛函分析/functional analysis.xmind" },
+  ]},
+  { name: "微分几何", en: "Differential Geometry", items: [
+    { title: "全部知识点梳理", pdfs: [{ label: "PDF", url: "/resources/微分几何/微分几何知识点梳理.pdf" }], xmind: "/resources/微分几何/微分几何公式一览.xmind" },
+  ]},
+  { name: "投资学", en: "Investment", items: [
+    { title: "投资学", pdfs: [{ label: "PDF", url: "/resources/投资学/投资学.pdf" }], xmind: "/resources/投资学/投资学.xmind" },
+  ]},
+  { name: "金融期权", en: "Financial Options", items: [
+    { title: "金融期权", pdfs: [{ label: "PDF", url: "/resources/金融期权/金融期权.pdf" }], xmind: "/resources/金融期权/金融期权.xmind" },
+  ]},
+  { name: "数学分析Ⅲ", en: "Mathematical Analysis III", items: [
+    { title: "第十四章 数项级数", xmind: "/resources/数学分析三/第十四章 数项级数.xmind" },
+    { title: "第十五章 广义积分", xmind: "/resources/数学分析三/第十五章 广义积分.xmind" },
+    { title: "第十六章 一致收敛", xmind: "/resources/数学分析三/第十六章 一致收敛.xmind" },
+    { title: "第十七章 幂级数", xmind: "/resources/数学分析三/第十七章 幂级数.xmind" },
+    { title: "第十八章 Fourier分析", xmind: "/resources/数学分析三/第十八章 Fourier分析.xmind" },
+    { title: "第十九章 含参变量积分", xmind: "/resources/数学分析三/第十九章 含参变量积分.xmind" },
+  ]},
+  { name: "概率论", en: "Probability Theory", items: [
+    { title: "第三章 随机变量与分布函数", pdfs: [{ label: "PDF", url: "/resources/概率论/第三章随机变量与分布函数.pdf" }], xmind: "/resources/概率论/第三章随机变量与分布函数.xmind" },
+    { title: "第四章 数字特征与特征函数", pdfs: [{ label: "PDF", url: "/resources/概率论/第四章数字特征与特征函数.pdf" }], xmind: "/resources/概率论/第四章数字特征与特征函数.xmind" },
+    { title: "第五章 极限定理", pdfs: [{ label: "PDF", url: "/resources/概率论/第五章极限定理.pdf" }], xmind: "/resources/概率论/第五章极限定理.xmind" },
+  ]},
+  { name: "常微分方程", en: "ODE", items: [
+    { title: "第二章 一阶方程的解法", pdfs: [{ label: "PDF", url: "/resources/ode/第二章 一阶方程的解法.pdf" }], xmind: "/resources/ode/第二章 一阶方程的解法.xmind" },
+  ]},
+  { name: "数值代数", en: "Numerical Algebra", items: [
+    { title: "期末重点", pdfs: [{ label: "PDF", url: "/resources/数值代数/数值代数回顾.pdf" }], xmind: "/resources/数值代数/数值代数回顾.xmind" },
+  ]},
+];
 ---
 
-<Layout title={`${name} - Personal Website`}>
-  <div class="hero-wrapper">
-    <div class="hero-grid">
-      
-      <div class="hero-content">
-        <div class="intro-label">
-          <span class="accent-dot yellow"></span>
-          <span class="accent-dot coral"></span>
-          <span class="accent-dot mint"></span>
-          <span class="accent-dot sky"></span>
-        </div>
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Yueshan Zhang — PhD student in Biostatistics at UC Berkeley. Causal inference & AI for public health." />
+  <title>Yueshan Zhang</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet" />
+</head>
+<body>
+<div id="cur-dot" class="cur-dot"></div>
+<div id="cur-ring" class="cur-ring"></div>
 
-        <h1>Hi, I'm <span class="highlight">{name}</span></h1>
-        <h2 class="subtitle">{titleLine}</h2>
-
-        <p class="bio">
-          My Chinese name is 张越珊. Friends call me “Dejiu” (得九) because 3×3=9, and the nickname stuck. I earned my B.S. from the
-          School of Mathematical Sciences at <strong>Nankai University</strong>, and in Spring 2025 I was a visiting student at
-          <strong>UC Berkeley</strong> for summer research. This fall, I will join UC Berkeley as a PhD student in Biostatistics, and I’m honored to be advised by
-<a class="inline-link" href="https://sites.google.com/berkeley.edu/jingshenwang/" target="_blank" rel="noreferrer">Prof. Jingshen Wang</a>.
-          <br /><br />
-          My research interests include <strong>causal inference</strong> and <strong>AI for public health</strong>.
-          I’m also genuinely excited about new and modern AI tools.
-        </p>
-
-        <div class="cta-buttons">
-          <a href="/research" class="btn btn-primary">
-            <span>View Research</span>
-            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-              <path d="M4 10h12m-6-6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </a>
-
-          <a href={cvUrl} class="btn btn-cv" target="_blank" rel="noreferrer">
-              <span>View CV</span>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14 2 14 8 20 8"></polyline>
-                  <line x1="16" y1="13" x2="8" y2="13"></line>
-                  <line x1="16" y1="17" x2="8" y2="17"></line>
-                  <polyline points="10 9 9 9 8 9"></polyline>
-              </svg>
-          </a>
-
-          <a href="/contact" class="btn btn-secondary">Get in Touch</a>
-        </div>
-      </div>
-
-      <div class="hero-image">
-        <div class="image-placeholder">
-          <img class="avatar" src="/avatar.png" alt={name} />
-
-          <img class="floating-badge badge-1" src="/Chiikawa1.png" alt="sticker 1" loading="lazy" decoding="async" />
-          <img class="floating-badge badge-2" src="/Chiikawa2.png" alt="sticker 2" loading="lazy" decoding="async" />
-          <img class="floating-badge badge-3" src="/Chiikawa3.png" alt="sticker 3" loading="lazy" decoding="async" />
-        </div>
-      </div>
-
+<!-- ══════════════ NAVBAR ══════════════ -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="#about" class="nav-logo">Yueshan</a>
+    <div class="nav-links">
+      <a href="#about"     class="nav-link active" data-target="about">About</a>
+      <a href="#research"  class="nav-link"         data-target="research">Research</a>
+      <a href="#resources" class="nav-link"         data-target="resources">Resources</a>
+      <a href="#contact"   class="nav-link"         data-target="contact">Contact</a>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+        <span class="tt-track"><span class="tt-knob"></span></span>
+        <span class="tt-icon">
+          <svg class="tt-moon" width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
+          </svg>
+          <svg class="tt-sun" width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="4.5" fill="currentColor"/>
+            <path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </button>
     </div>
   </div>
-</Layout>
+</nav>
 
-<style>
-  /* 核心布局 */
-  .hero-wrapper {
-    min-height: 85vh; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 2rem; 
-    max-width: 1280px; 
-    margin: 0 auto;
-    /* 修改：从 -4rem 改为 -1rem，稍微上移一点点即可，不要过度 */
-    margin-top: -2rem; 
-  }
+<!-- ══════════════ DOT NAV ══════════════ -->
+<div class="dot-nav" id="dotNav">
+  <button class="dot active" data-section="about"     aria-label="About"><span class="dot-label">About</span></button>
+  <button class="dot"        data-section="research"  aria-label="Research"><span class="dot-label">Research</span></button>
+  <button class="dot"        data-section="resources" aria-label="Resources"><span class="dot-label">Resources</span></button>
+  <button class="dot"        data-section="contact"   aria-label="Contact"><span class="dot-label">Contact</span></button>
+</div>
 
-  .hero-grid {
-    display: grid;
-    /* 保持左宽右窄，给文字充足空间 */
-    grid-template-columns: 2.2fr 1fr; 
-    gap: 1rem; 
-    width: 100%;
-    align-items: center;
-  }
+<!-- ══════════════ SCROLL CONTAINER ══════════════ -->
+<div id="scroll-container">
 
-  /* 左侧内容 */
-  .intro-label {
-    margin-bottom: 0.8rem;
-    display: flex;
-    gap: 0.5rem;
-  }
+  <!-- ░░░░ SECTION 1 · ABOUT ░░░░ -->
+  <section id="about" class="section s-about">
+    <canvas id="particles-canvas"></canvas>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
 
-  .accent-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    border: 2px solid var(--dark);
-  }
-  .yellow { background: var(--yellow); }
-  .coral { background: var(--coral); }
-  .mint { background: var(--mint); }
-  .sky { background: var(--sky); }
+    <div class="about-layout">
+      <div class="about-left">
+        <div class="greeting r-item">
+          <span class="bounce-dots">
+            <span class="bd"></span>
+            <span class="bd"></span>
+            <span class="bd"></span>
+          </span>
+        </div>
+        <h1 class="hero-name r-item">
+          <span class="name-line">Yueshan <span class="name-accent">Zhang</span></span>
+        </h1>
+        <div class="hero-role r-item">
+          <span class="role-pre">PhD Student · </span><span id="typewriter" class="role-dyn"></span><span class="cursor">|</span>
+        </div>
+        <p class="hero-bio r-item">
+          My Chinese name is 张越珊. Friends call me "Dejiu" (得九) because 3×3=9, and the nickname stuck.
+          I earned my B.S. from the School of Mathematical Sciences at <strong>Nankai University</strong>,
+          and in Spring 2025 I was a visiting student at <strong>UC Berkeley</strong> for summer research.
+          This fall, I will join UC Berkeley as a PhD student in Biostatistics, and I'm honored to be advised by
+          <a href="https://sites.google.com/berkeley.edu/jingshenwang/" target="_blank" rel="noopener" class="bio-link">Prof. Jingshen Wang</a>.
+        </p>
+        <p class="hero-bio r-item">
+          My research interests include <strong>causal inference</strong> and <strong>AI for public health</strong>.
+          I'm also genuinely excited about new and modern AI tools.
+        </p>
+        <div class="hero-tags r-item">
+          <span class="tag">Causal Inference</span>
+          <span class="tag">AI · Public Health</span>
+          <span class="tag">Biostatistics</span>
+        </div>
+        <div class="hero-cta r-item">
+          <a href="#research"  class="btn btn-p">View Research</a>
+          <a href="/cv.pdf" target="_blank" rel="noopener" class="btn btn-o">Download CV</a>
+          <a href="#contact"   class="btn btn-g">Get in Touch</a>
+        </div>
+      </div>
 
-  .highlight {
-    position: relative;
-    display: inline-block;
-    white-space: nowrap; /* 强制不换行 */
-  }
+      <div class="about-right r-item">
+        <div class="avatar-scene" id="avatarScene">
+          <div class="avatar-ring" id="avatarRing">
+            <div class="blob-glow" id="blobGlow"></div>
+            <div class="blob-border" id="blobBorder">
+              <div class="blob-accent"></div>
+              <div class="blob-inner">
+                <div class="avatar-circle">
+                  <img class="avatar-photo" src="/avatar.png" alt="Yueshan Zhang" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="side-dots">
+            <span class="dot dot-gold"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+          <img src="/Chiikawa1.png" class="chiikawa ck1" alt="" />
+          <img src="/Chiikawa2.png" class="chiikawa ck2" alt="" />
+          <img src="/Chiikawa3.png" class="chiikawa ck3" alt="" />
+        </div>
+      </div>
+    </div>
 
-  .highlight::after {
-    content: '';
-    position: absolute;
-    bottom: 5px;
-    left: -4px;
-    right: -8px;
-    height: 14px;
-    background: var(--yellow);
-    z-index: -1;
-    transform: rotate(-1deg);
-    border-radius: 4px;
-    animation: fadeInUp 0.8s ease-out 0.4s both;
-  }
+    <div class="scroll-hint">
+      <div class="mouse"><div class="wheel"></div></div>
+      <span>Scroll to explore</span>
+    </div>
+  </section>
 
-  h1 {
-    /* 修改：调小最大字号 (3.8rem -> 3.2rem) 以确保一行能放下 */
-    font-size: clamp(2rem, 3.5vw, 3.2rem);
-    font-weight: 900;
-    margin-bottom: 0.5rem;
-    letter-spacing: -0.03em;
-    color: var(--dark);
-    line-height: 1.1;
-    /* 防止文字折行 */
-    white-space: nowrap; 
-  }
+  <!-- ░░░░ SECTION 2 · RESEARCH ░░░░ -->
+  <section id="research" class="section s-research">
+    <div class="bg-num">02</div>
+    <div class="orb orb-r1"></div>
+    <div class="orb orb-r2"></div>
 
-  .subtitle {
-    color: var(--gray);
-    font-size: clamp(1rem, 2vw, 1.3rem);
-    font-style: italic;
-    margin-bottom: 1.5rem;
-    font-family: serif;
-  }
+    <div class="sec-header">
+      <div class="sec-label"><span class="sec-bar"></span><span>Research Work</span></div>
+      <h2 class="sec-title rr">Research</h2>
+      <p class="sec-sub rr">Working at the intersection of statistics, causal inference, and public health</p>
+    </div>
 
-  .bio {
-    font-size: 1.05rem;
-    line-height: 1.7;
-    margin-bottom: 2.5rem;
-    animation: fadeInUp 0.8s ease-out 0.5s both;
-    max-width: 95%;
-    color: #333;
-  }
+    <div class="research-grid">
+      <div class="rcard tilt rr" style="--d:0s">
+        <div class="card-glow"></div>
+        <div class="card-inner">
+          <div class="card-top">
+            <div class="card-meta"><span class="cyear">2026</span><span class="cstatus st-acc">Accepted</span></div>
+            <span class="ctype">Journal Article</span>
+          </div>
+          <h3 class="ctitle"><a href="https://www.sciencedirect.com/science/article/abs/pii/S0965856426001072" target="_blank" rel="noopener" class="ctitle-link">Congestion Pricing in New York City: Effects on Ride-Hailing and Transit ↗</a></h3>
+          <p class="cdesc">Estimated causal impacts of NYC's $1.50 per-trip congestion charge on Uber, Lyft, and subway ridership using two-way fixed effects with high-frequency panel data. Leveraged Lyft's temporary rider credit as a quasi-experiment.</p>
+          <div class="ctags"><span>Causal Inference</span><span>Transportation</span><span>Panel Data</span></div>
+          <div class="cfoot">
+            <span class="cjournal">Transportation Research Part A</span>
+            <span class="cadv">Adv: <a href="https://sites.google.com/view/manxi-wu/home" target="_blank" rel="noopener">Prof. Manxi Wu</a></span>
+          </div>
+        </div>
+      </div>
 
-  .bio strong {
-    color: var(--dark);
-    font-weight: 700;
-    border-bottom: 2px solid rgba(0,0,0,0.1);
-  }
+      <div class="rcard tilt rr" style="--d:0.12s">
+        <div class="card-glow"></div>
+        <div class="card-inner">
+          <div class="card-top">
+            <div class="card-meta"><span class="cyear">2026</span><span class="cstatus st-prep">Under Review</span></div>
+            <span class="ctype">Manuscript</span>
+          </div>
+          <h3 class="ctitle">Where Do Adolescent Digital Twins Succeed and Fail?</h3>
+          <p class="cdesc">Survey-anchored adolescent "digital twins" built from 2023 YRBS with narrative memory via RAG. Multi-layer validation and in-silico replications of 10 published adolescent RCTs.</p>
+          <div class="ctags"><span>LLM Agents</span><span>Public Health</span><span>RAG</span></div>
+          <div class="cfoot">
+            <span class="cjournal">npj Digital Medicine</span>
+            <span class="cadv">Adv: <a href="https://sites.google.com/berkeley.edu/jingshenwang/" target="_blank" rel="noopener">Prof. Jingshen Wang</a></span>
+          </div>
+        </div>
+      </div>
 
-  /* CTA Buttons */
-  .cta-buttons {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    animation: fadeInUp 0.8s ease-out 0.6s both;
-  }
+      <div class="rcard tilt rr" style="--d:0.24s">
+        <div class="card-glow card-glow-y"></div>
+        <div class="card-inner">
+          <div class="card-top">
+            <div class="card-meta"><span class="cstatus st-proj">Project</span></div>
+          </div>
+          <h3 class="ctitle">Sentiment-Driven Crypto Pricing</h3>
+          <p class="cdesc">Integrated Transformer models with Graph Neural Networks (GNNs) to predict crypto returns, incorporating sentiment analysis and liquidity factors.</p>
+          <div class="ctags"><span>Deep Learning</span><span>GNN</span><span>Quant Finance</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  .btn {
-    padding: 0.7rem 1.4rem; /* 稍微缩小一点按钮，显得更精致 */
-    border-radius: 50px;
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-family: var(--font-body);
-    border: 3px solid var(--dark);
-    box-shadow: 4px 4px 0 var(--dark);
-  }
+  <!-- ░░░░ SECTION 3 · RESOURCES ░░░░ -->
+  <section id="resources" class="section s-resources">
+    <div class="bg-num">03</div>
+    <div class="orb orb-g1"></div>
 
-  .btn:hover {
-    transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0 var(--dark);
-  }
+    <div class="sec-header">
+      <div class="sec-label"><span class="sec-bar sec-bar-g"></span><span>Study Materials</span></div>
+      <h2 class="sec-title rv">Resources</h2>
+      <p class="sec-sub rv">Notes &amp; mind maps from undergraduate studies at Nankai University</p>
+    </div>
 
-  .btn-primary { background: var(--coral); color: white; }
-  .btn-cv { background: var(--yellow); color: var(--dark); }
-  .btn-secondary { background: white; color: var(--dark); }
-  .btn-secondary:hover { background: #f0f0f0; }
+    <div class="res-body rv">
+      <div class="res-scroll">
+        <div class="courses-grid">
+          {undergradCourses.map((course, ci) => (
+            <div class="ccard" data-ci={ci}>
+              <button class="ccard-head" type="button">
+                <span class="ccard-name">{course.name} <em class="ccard-en">{course.en}</em></span>
+                <span class="ccard-count">{course.items.length}</span>
+                <span class="ccard-arrow">▾</span>
+              </button>
+              <div class="ccard-body">
+                <div class="ccard-items">
+                  {course.items.map((item) => (
+                    <div class="citem">
+                      <span class="citem-title">{item.title}</span>
+                      <span class="citem-links">
+                        {(('pdfs' in item ? item.pdfs : []) as {label:string,url:string}[]).map((p) => (
+                          <a href={enc(p.url)} target="_blank" rel="noopener" class="clink pdf">{p.label}</a>
+                        ))}
+                        {item.xmind && (
+                          <a href={enc(item.xmind)} download class="clink xmind">XMind</a>
+                        )}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
 
-  /* 右侧图片区域 */
-  .hero-image {
-    position: relative;
-    animation: fadeInUp 0.8s ease-out 0.7s both;
-    display: flex;
-    justify-content: center;
-  }
+  <!-- ░░░░ SECTION 4 · CONTACT ░░░░ -->
+  <section id="contact" class="section s-contact">
+    <div class="bg-num">04</div>
+    <div class="orb orb-p1"></div>
+    <div class="orb orb-p2"></div>
 
-  .image-placeholder {
-    width: 100%;
-    max-width: 380px; /* 稍微调小图片最大宽度，给文字腾更多地 */
-    aspect-ratio: 1;
-    background: linear-gradient(135deg, var(--mint), var(--sky));
-    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-    border: 4px solid var(--dark);
-    position: relative;
-    overflow: visible;
-    animation: morphing 8s ease-in-out infinite;
-    display: grid;
-    place-items: center;
-    box-shadow: 8px 8px 0 var(--dark);
-  }
+    <div class="contact-layout">
+      <div class="contact-left">
+        <div class="sec-label cv"><span class="sec-bar sec-bar-p"></span><span>Get In Touch</span></div>
+        <h2 class="contact-head cv">
+          Let's<br/><span class="ch-accent">Connect</span>
+        </h2>
+        <p class="contact-sub cv">Email is best. I usually reply within 1–2 days.</p>
+        <div class="contact-bar cv"></div>
+      </div>
 
-  @keyframes morphing {
-    0%, 100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
-    50% { border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%; }
-  }
+      <div class="contact-right">
+        <div class="email-block cv">
+          <div class="block-label">Email</div>
+          <div class="email-row">
+            <div class="email-info">
+              <span class="email-addr">yueshanzhanghappy@gmail.com</span>
+              <span class="email-tag">Personal</span>
+            </div>
+            <button class="copy-btn" data-email="yueshanzhanghappy@gmail.com" aria-label="Copy email">Copy</button>
+          </div>
+          <div class="email-row">
+            <div class="email-info">
+              <span class="email-addr">yueshanzhang@berkeley.edu</span>
+              <span class="email-tag">Academic</span>
+            </div>
+            <button class="copy-btn" data-email="yueshanzhang@berkeley.edu" aria-label="Copy email">Copy</button>
+          </div>
+        </div>
 
-  .image-placeholder::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(circle at 30% 30%, var(--yellow) 0%, transparent 50%),
-      radial-gradient(circle at 70% 70%, var(--coral) 0%, transparent 50%);
-    opacity: 0.25;
-    pointer-events: none;
-  }
+        <div class="social-block cv">
+          <div class="block-label">Online</div>
+          <div class="social-links">
+            <a href="https://github.com/Dejiu-Zhang" target="_blank" rel="noopener" class="slink">
+              <svg viewBox="0 0 24 24" fill="currentColor" class="sicon"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+              GitHub
+            </a>
+            <a href="https://www.linkedin.com/in/yueshan-zhang-804782392/" target="_blank" rel="noopener" class="slink">
+              <svg viewBox="0 0 24 24" fill="currentColor" class="sicon"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+              LinkedIn
+            </a>
+            <a href="https://scholar.google.com/citations?hl=en&user=uGJCTdgAAAAJ" target="_blank" rel="noopener" class="slink">
+              <svg viewBox="0 0 24 24" fill="currentColor" class="sicon"><path d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm0-24L0 9.5l4.838 3.94A8 8 0 0 1 12 10a8 8 0 0 1 7.162 3.44L24 9.5z"/></svg>
+              Scholar
+            </a>
+            <a href="https://www.instagram.com/zhangdejiu9" target="_blank" rel="noopener" class="slink">
+              <svg viewBox="0 0 24 24" fill="currentColor" class="sicon"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+              Instagram
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  .avatar {
-    width: 75%;
-    height: 75%;
-    object-fit: cover;
-    border-radius: 999px;
-    border: 4px solid var(--dark);
-    background: white;
-    position: relative;
-    z-index: 1;
-  }
+</div><!-- /scroll-container -->
 
-  /* 贴纸动画 */
-  .floating-badge {
-    position: absolute;
-    z-index: 2;
-    width: 90px;
-    height: 90px;
-    object-fit: contain;
-    background: transparent;
-    pointer-events: none;
-    animation: floatBadge 3.5s ease-in-out infinite;
-    filter: drop-shadow(4px 4px 0 rgba(0,0,0,0.2));
-  }
+<style is:global>
+/* ═══════════════════════════════════
+   RESET
+═══════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+a { text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+img { display: block; max-width: 100%; }
 
-  .badge-1 { top: 0%; right: 5%; animation-delay: 0s; }
-  .badge-2 { bottom: 0%; right: 5%; animation-delay: 1.2s; }
-  .badge-3 { top: 45%; left: -5%; animation-delay: 2.4s; }
+/* ═══════════════════════════════════
+   DARK THEME (default)
+═══════════════════════════════════ */
+html {
+  --bg:       #0a0a0c;
+  --surf:     #111114;
+  --surf2:    #181818;
+  --card-bg:  rgba(20,20,26,0.7);
+  --nav-bg:   rgba(10,10,12,0.82);
+  --border:   rgba(255,255,255,0.07);
+  --accent:   #e8c872;
+  --accent-l: #f0d896;
+  --accent2:  #72c5e8;
+  --coral:    #e87272;
+  --green:    #72e8b0;
+  --yellow:   #e8c872;
+  --text:     #ede9df;
+  --muted:    #a09d94;
+  --subtle:   #6b6860;
+  --bg-num-c: rgba(255,255,255,0.025);
+  --hover-bg: rgba(255,255,255,0.025);
+  --nav-h: 60px;
+  --sans:  'Space Grotesk', sans-serif;
+  --serif: 'Playfair Display', serif;
+  --mono:  'JetBrains Mono', monospace;
+}
 
-  @keyframes floatBadge {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-15px) rotate(8deg); }
-  }
+/* ═══════════════════════════════════
+   LIGHT THEME
+═══════════════════════════════════ */
+html[data-theme="light"] {
+  --bg:       #f5f0e8;
+  --surf:     #ebe5d9;
+  --surf2:    #dfd9cc;
+  --card-bg:  rgba(255,255,255,0.65);
+  --nav-bg:   rgba(245,240,232,0.88);
+  --border:   rgba(0,0,0,0.08);
+  --accent:   #b8943e;
+  --accent-l: #c8a450;
+  --accent2:  #3a8aab;
+  --coral:    #c45454;
+  --green:    #3aab6e;
+  --yellow:   #b8943e;
+  --text:     #1a1816;
+  --muted:    #6b665c;
+  --subtle:   #9a9590;
+  --bg-num-c: rgba(0,0,0,0.04);
+  --hover-bg: rgba(0,0,0,0.025);
+}
 
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+html, body { height: 100%; overflow: hidden; background: var(--bg); }
+body {
+  font-family: var(--sans); color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.5s, color 0.5s;
+}
 
-  /* Responsive */
-  @media (max-width: 960px) {
-    .hero-wrapper {
-      padding: 2rem 1.5rem;
-      align-items: flex-start;
-      margin-top: 0; /* 移动端不需要负边距 */
-    }
+/* smooth theme transitions */
+*, *::before, *::after {
+  transition-property: background-color, border-color, color, box-shadow;
+  transition-duration: 0s;
+}
+body.t-switching, body.t-switching *, body.t-switching *::before, body.t-switching *::after {
+  transition-duration: 0.45s !important;
+}
 
-    .hero-grid {
-      grid-template-columns: 1fr;
-      gap: 3rem;
-      text-align: center;
-    }
-    
-    .hero-image { order: -1; }
+/* ═══════════════════════════════════
+   NAVBAR
+═══════════════════════════════════ */
+#navbar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--nav-h); z-index: 200;
+  background: var(--nav-bg);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: 1300px; margin: 0 auto;
+  height: 100%; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2.5rem;
+}
+.nav-logo {
+  font-family: var(--serif); font-style: italic;
+  font-size: 1.4rem; color: var(--accent); transition: opacity 0.3s;
+}
+.nav-logo:hover { opacity: 0.8; }
+.nav-links { display: flex; align-items: center; gap: 1.75rem; }
+.nav-link {
+  font-size: 0.83rem; font-weight: 600; letter-spacing: 0.06em;
+  color: var(--muted); position: relative; transition: color 0.3s; padding-bottom: 2px;
+}
+.nav-link::after {
+  content: ''; position: absolute; bottom: -2px; left: 0;
+  width: 0; height: 2px; background: var(--accent); transition: width 0.3s;
+}
+.nav-link:hover, .nav-link.active { color: var(--text); }
+.nav-link:hover::after, .nav-link.active::after { width: 100%; }
 
-    .image-placeholder {
-      max-width: 280px;
-      margin: 0 auto;
-    }
+/* Theme toggle */
+.theme-toggle {
+  display: flex; align-items: center; gap: 0.45rem;
+  padding: 0.3rem 0.6rem; border-radius: 100px;
+  background: var(--surf); border: 1px solid var(--border);
+  cursor: pointer; transition: border-color 0.3s;
+}
+.theme-toggle:hover { border-color: var(--accent); }
+.tt-track {
+  width: 30px; height: 16px; border-radius: 8px;
+  background: var(--surf2); border: 1px solid var(--border);
+  position: relative; transition: background 0.4s;
+}
+html[data-theme="light"] .tt-track { background: var(--accent); }
+.tt-knob {
+  position: absolute; top: 1.5px; left: 1.5px;
+  width: 11px; height: 11px; border-radius: 50%;
+  background: var(--subtle); transition: transform 0.4s cubic-bezier(0.4,0,0.2,1), background 0.4s;
+}
+html[data-theme="light"] .tt-knob { transform: translateX(14px); background: white; }
+.tt-icon { display: flex; align-items: center; }
+.tt-moon { color: var(--muted); display: block; }
+.tt-sun  { color: var(--accent); display: none; }
+html[data-theme="light"] .tt-moon { display: none; }
+html[data-theme="light"] .tt-sun  { display: block; }
 
-    .cta-buttons {
-      justify-content: center;
-    }
-    
-    .intro-label {
-      justify-content: center;
-    }
-    
-    .bio {
-      margin-left: auto;
-      margin-right: auto;
-    }
-    
-    h1, .highlight {
-      white-space: normal; /* 移动端必须允许换行 */
-    }
-  }
+/* ═══════════════════════════════════
+   DOT NAV
+═══════════════════════════════════ */
+.dot-nav {
+  position: fixed; right: 1.75rem; top: 50%;
+  transform: translateY(-50%); z-index: 200;
+  display: flex; flex-direction: column; gap: 1.1rem;
+}
+.dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--subtle); cursor: pointer; position: relative;
+  transition: all 0.35s ease;
+}
+.dot:hover, .dot.active {
+  background: var(--accent);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 60%, transparent);
+  transform: scale(1.5);
+}
+.dot-label {
+  position: absolute; right: 1.6rem; top: 50%;
+  transform: translateY(-50%) translateX(6px);
+  opacity: 0; transition: all 0.3s;
+  font-size: 0.72rem; color: var(--muted); white-space: nowrap;
+  background: var(--surf2); padding: 0.2rem 0.6rem;
+  border-radius: 5px; border: 1px solid var(--border);
+  pointer-events: none;
+}
+.dot:hover .dot-label { opacity: 1; transform: translateY(-50%) translateX(0); }
+
+/* ═══════════════════════════════════
+   SCROLL CONTAINER & SECTIONS
+═══════════════════════════════════ */
+#scroll-container {
+  height: 100vh; overflow-y: scroll;
+  scroll-snap-type: y mandatory; scroll-behavior: smooth;
+}
+#scroll-container::-webkit-scrollbar { display: none; }
+.section {
+  height: 100vh; scroll-snap-align: start;
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column;
+  background: var(--bg);
+}
+
+/* ═══════════════════════════════════
+   SHARED DECORATIVE
+═══════════════════════════════════ */
+.orb {
+  position: absolute; border-radius: 50%;
+  pointer-events: none; filter: blur(80px); opacity: 0.14;
+}
+html[data-theme="light"] .orb { opacity: 0.07; filter: blur(90px) saturate(0.35); }
+
+.bg-num {
+  position: absolute; right: 3rem; bottom: -1rem;
+  font-size: clamp(6rem,18vw,14rem); font-family: var(--serif);
+  font-weight: 700; color: var(--bg-num-c);
+  line-height: 1; pointer-events: none; user-select: none; z-index: 0;
+}
+.sec-label { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.4rem; }
+.sec-bar { width: 36px; height: 2px; background: var(--accent); border-radius: 2px; }
+.sec-bar-g { background: var(--green); }
+.sec-bar-p { background: var(--coral); }
+.sec-label span:last-child {
+  font-family: var(--mono); font-size: 0.72rem;
+  color: var(--accent); letter-spacing: 0.18em; text-transform: uppercase;
+}
+.sec-title {
+  font-family: var(--serif); font-size: clamp(2.2rem,5vw,3.8rem);
+  font-weight: 700; line-height: 1.1; margin-bottom: 0.4rem;
+}
+.sec-sub { color: var(--muted); font-size: 0.95rem; white-space: nowrap; }
+
+.r-item, .rr, .rv, .cv {
+  opacity: 0; transform: translateY(32px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.r-item.on, .rr.on, .rv.on, .cv.on { opacity: 1; transform: translateY(0); }
+
+/* ═══════════════════════════════════
+   S1 — ABOUT
+═══════════════════════════════════ */
+.orb-1 { width:550px; height:550px; background:var(--accent); top:-150px; right:-100px; animation: od 12s ease-in-out infinite; }
+.orb-2 { width:350px; height:350px; background:var(--accent2); bottom:-80px; left:-60px; animation: od 9s ease-in-out infinite 2s; }
+.orb-3 { width:200px; height:200px; background:var(--coral); top:30%; left:40%; animation: od 7s ease-in-out infinite 4s; }
+@keyframes od { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(20px,-20px) scale(1.08)} }
+
+#particles-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+
+.about-layout {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 3rem; padding: 0 5rem 0 9rem;
+  height: 100%; max-width: 1400px; margin: 0 auto; width: 100%;
+  padding-top: var(--nav-h); position: relative; z-index: 1;
+}
+.about-left { flex: 1; max-width: 680px; display: flex; flex-direction: column; gap: 1.1rem; position: relative; top: -2vh; }
+.about-right { flex: 0 0 auto; margin-right: 5rem; }
+
+.greeting { display: flex; align-items: center; }
+
+.bounce-dots { display: flex; align-items: center; gap: 7px; }
+.bd {
+  display: inline-block; width: 9px; height: 9px; border-radius: 50%;
+  animation: bd-jump 1.5s ease-in-out infinite;
+}
+.bd:nth-child(1) { background: var(--accent);  animation-delay: 0s; }
+.bd:nth-child(2) { background: var(--coral);   animation-delay: 0.2s; }
+.bd:nth-child(3) { background: var(--accent2); animation-delay: 0.4s; }
+@keyframes bd-jump {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-11px); }
+}
+
+.hero-name {
+  font-family: var(--serif); font-size: clamp(3rem,6vw,5.5rem);
+  line-height: 1.05; font-weight: 700;
+}
+.name-line { display: block; color: var(--text); }
+.name-accent { color: var(--accent); font-style: italic; }
+
+.hero-role {
+  font-family: var(--mono); font-size: 1rem; color: var(--muted);
+  display: flex; align-items: center; gap: 0.2rem; flex-wrap: wrap;
+}
+.role-dyn { color: var(--accent2); }
+.cursor { color: var(--accent); animation: blink 1s step-end infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+.hero-bio { color: var(--muted); line-height: 1.8; font-size: 0.95rem; }
+.hero-bio strong { color: var(--text); font-weight: 600; }
+.bio-link {
+  color: var(--accent2);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--accent2) 35%, transparent);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition: text-decoration-color 0.3s, color 0.3s;
+}
+.bio-link:hover {
+  color: var(--accent-l);
+  text-decoration-color: var(--accent-l);
+}
+
+.hero-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.tag {
+  padding: 0.3rem 0.8rem; border: 1px solid var(--border);
+  border-radius: 100px; font-size: 0.78rem; color: var(--muted);
+  background: var(--surf); font-family: var(--mono); transition: all 0.3s;
+}
+.tag:hover { border-color: color-mix(in srgb, var(--accent) 50%, transparent); color: var(--accent); }
+
+.hero-cta { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+.btn {
+  padding: 0.7rem 1.6rem; border-radius: 8px;
+  font-size: 0.88rem; font-weight: 600; transition: all 0.3s;
+  display: inline-flex; align-items: center;
+}
+.btn-p { background: var(--accent); color: #111; }
+.btn-p:hover { background: var(--accent-l); transform: translateY(-2px); box-shadow: 0 8px 24px color-mix(in srgb, var(--accent) 35%, transparent); }
+.btn-o { background: transparent; color: var(--accent2); border: 1px solid var(--accent2); }
+.btn-o:hover { background: color-mix(in srgb, var(--accent2) 10%, transparent); transform: translateY(-2px); }
+.btn-g { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+.btn-g:hover { color: var(--text); border-color: var(--muted); transform: translateY(-2px); }
+
+/* ── Blob Avatar ── */
+.avatar-scene {
+  position: relative; width: 100%; max-width: 410px;
+  aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.avatar-ring {
+  position: relative; width: 86%; aspect-ratio: 1;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.12s ease-out; will-change: transform;
+}
+.blob-glow {
+  position: absolute; inset: -10px;
+  background: radial-gradient(circle, rgba(184,148,62,.15) 0%, transparent 65%);
+  opacity: 0; transition: opacity 0.5s; pointer-events: none;
+  animation: morph 8s ease-in-out infinite;
+}
+.avatar-scene:hover .blob-glow { opacity: 1; }
+.blob-border {
+  width: 100%; height: 100%; padding: 3px; position: relative;
+  background: linear-gradient(135deg, #b8943e, #d4ae58, #c8a448, #b8943e);
+  background-size: 200% 200%;
+  animation: borderFlow 6s ease-in-out infinite, morph 8s ease-in-out infinite;
+  transition: box-shadow 0.4s;
+}
+.avatar-scene:hover .blob-border { box-shadow: 0 0 28px rgba(184,148,62,.28); }
+.blob-border.is-clicked { animation: clickPop 0.8s ease forwards !important; }
+.blob-glow.is-clicked   { animation: clickPop 0.8s ease forwards !important; }
+.blob-accent {
+  position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(232,193,112,.15) 0%, transparent 50%),
+    radial-gradient(circle at 70% 70%, rgba(91,184,169,.1) 0%, transparent 50%);
+  opacity: 0.6;
+}
+.blob-inner {
+  width: 100%; height: 100%; border-radius: inherit; overflow: hidden;
+  background: var(--bg); display: grid; place-items: center;
+  transition: background 0.5s;
+}
+.avatar-circle {
+  width: 80%; height: 80%; border-radius: 50%; overflow: hidden;
+  border: 2px solid rgba(184,148,62,.35);
+  transition: transform 0.4s, filter 0.4s;
+}
+.avatar-scene:hover .avatar-circle { transform: scale(1.03); filter: brightness(1.03); }
+.avatar-photo { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* dark-mode blob overrides */
+[data-theme="dark"] .blob-border {
+  background: linear-gradient(135deg, #c8956c, #e8c170, #d4a574, #e8c170, #c8956c);
+  background-size: 300% 300%;
+  animation: borderGlow 5s ease-in-out infinite, morph 8s ease-in-out infinite;
+  box-shadow: 0 0 18px rgba(232,193,112,.12), 0 0 36px rgba(200,149,108,.06);
+}
+[data-theme="dark"] .avatar-scene:hover .blob-border {
+  box-shadow: 0 0 30px rgba(232,193,112,.22), 0 0 60px rgba(200,149,108,.1);
+}
+[data-theme="dark"] .blob-glow {
+  background: radial-gradient(circle, rgba(232,193,112,.14) 0%, transparent 65%);
+  inset: -16px; opacity: 0.6;
+}
+[data-theme="dark"] .avatar-scene:hover .blob-glow { opacity: 1; }
+[data-theme="dark"] .blob-accent {
+  background:
+    radial-gradient(circle at 35% 35%, rgba(232,193,112,.12) 0%, transparent 50%),
+    radial-gradient(circle at 70% 70%, rgba(200,149,108,.08) 0%, transparent 50%);
+}
+[data-theme="dark"] .avatar-circle { border-color: rgba(232,193,112,.25); }
+[data-theme="dark"] .dot-gold { background: #e8c170; }
+[data-theme="dark"] .dot:not(.dot-gold) { background: #444; }
+
+/* blob keyframes */
+@keyframes morph {
+  0%,100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+  25%      { border-radius: 50% 50% 60% 40% / 45% 55% 45% 55%; }
+  50%      { border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%; }
+  75%      { border-radius: 40% 60% 55% 45% / 55% 40% 60% 40%; }
+}
+@keyframes borderFlow {
+  0%,100% { background-position: 0% 50%; }
+  50%     { background-position: 100% 50%; }
+}
+@keyframes borderGlow {
+  0%,100% { background-position: 0% 50%; }
+  33%     { background-position: 100% 0%; }
+  66%     { background-position: 50% 100%; }
+}
+@keyframes clickPop {
+  0%   { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; transform: scale(1); }
+  25%  { border-radius: 50%; transform: scale(0.95); }
+  50%  { border-radius: 50%; transform: scale(1.04); }
+  75%  { border-radius: 50%; transform: scale(0.99); }
+  100% { border-radius: 50%; transform: scale(1); }
+}
+
+/* side dots */
+.side-dots {
+  position: absolute; right: -24px; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.dot { width: 6px; height: 6px; border-radius: 50%; background: #999; opacity: 0.25; transition: all 0.4s; }
+.dot-gold { background: #c8956c; opacity: 0.5; }
+.avatar-scene:hover .dot-gold { opacity: 0.8; transform: translateX(-3px); }
+.avatar-scene:hover .dot { opacity: 0.4; transform: translateX(-3px); }
+
+/* Chiikawa stickers */
+.chiikawa { position: absolute; z-index: 4; pointer-events: none; drop-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+.ck1 { width: 78px; top: 5%; left: 5%; animation: ckf 3.2s ease-in-out infinite; }
+.ck2 { width: 64px; top: 12%; right: 4%; animation: ckf 3.7s ease-in-out infinite 0.6s; }
+.ck3 { width: 70px; bottom: 8%; right: 8%; animation: ckf 4.1s ease-in-out infinite 1.3s; }
+@keyframes ckf {
+  0%,100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-14px) rotate(4deg); }
+}
+
+
+.scroll-hint {
+  position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+  z-index: 1; animation: sh 2.5s ease-in-out infinite;
+}
+@keyframes sh { 0%,100%{opacity:0.4;transform:translateX(-50%) translateY(0)} 50%{opacity:1;transform:translateX(-50%) translateY(6px)} }
+.mouse { width: 22px; height: 34px; border: 2px solid color-mix(in srgb, var(--text) 20%, transparent); border-radius: 11px; display: flex; justify-content: center; padding-top: 5px; }
+.wheel { width: 3px; height: 7px; background: var(--accent); border-radius: 2px; animation: sw 1.6s ease-in-out infinite; }
+@keyframes sw { 0%{opacity:1;transform:translateY(0)} 100%{opacity:0;transform:translateY(8px)} }
+.scroll-hint span { font-size: 0.65rem; color: var(--subtle); letter-spacing: 0.12em; text-transform: uppercase; font-family: var(--mono); }
+
+/* ═══════════════════════════════════
+   S2 — RESEARCH
+═══════════════════════════════════ */
+.s-research {
+  padding: var(--nav-h) 5rem 2rem;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.orb-r1 { width:400px; height:400px; background:var(--accent); top:-100px; left:-80px; animation: od 14s ease-in-out infinite; }
+.orb-r2 { width:300px; height:300px; background:var(--coral); bottom:-60px; right:-60px; animation: od 10s ease-in-out infinite 3s; }
+.s-research .sec-header { margin-bottom: 1.5rem; position: relative; z-index: 1; }
+.s-research .sec-label span:last-child { color: var(--accent); }
+
+.research-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 1.25rem; position: relative; z-index: 1;
+  max-height: calc(100vh - var(--nav-h) - 160px);
+}
+
+.rcard {
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 16px; position: relative; overflow: hidden;
+  transition: border-color 0.35s, box-shadow 0.35s;
+  transform-style: preserve-3d; will-change: transform;
+  display: flex; flex-direction: column; backdrop-filter: blur(6px);
+}
+.rcard:hover { border-color: color-mix(in srgb, var(--accent) 50%, transparent); box-shadow: 0 20px 50px color-mix(in srgb, var(--bg) 50%, transparent); }
+.card-glow {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(circle at var(--mx,50%) var(--my,50%), color-mix(in srgb, var(--accent) 12%, transparent) 0%, transparent 55%);
+  opacity: 0; transition: opacity 0.35s;
+}
+.card-glow-y {
+  background: radial-gradient(circle at var(--mx,50%) var(--my,50%), color-mix(in srgb, var(--accent) 14%, transparent) 0%, transparent 55%);
+}
+.rcard:hover .card-glow { opacity: 1; }
+.card-inner { padding: 1.4rem; display: flex; flex-direction: column; flex: 1; position: relative; z-index: 1; }
+.card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.85rem; }
+.card-meta { display: flex; align-items: center; gap: 0.5rem; }
+.cyear { font-family: var(--mono); font-size: 0.7rem; color: var(--subtle); }
+.cstatus {
+  font-size: 0.67rem; padding: 0.18rem 0.55rem; border-radius: 100px;
+  font-weight: 700; font-family: var(--mono); letter-spacing: 0.05em;
+}
+.st-acc {
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  animation: pacc 2.5s ease-in-out infinite;
+}
+@keyframes pacc { 0%,100%{box-shadow:0 0 0 0 color-mix(in srgb, var(--accent) 25%, transparent)} 50%{box-shadow:0 0 0 5px transparent} }
+.st-prep {
+  background: color-mix(in srgb, var(--green) 12%, transparent);
+  color: var(--green);
+  border: 1px solid color-mix(in srgb, var(--green) 30%, transparent);
+  animation: pg 2.5s ease-in-out infinite 0.8s;
+}
+@keyframes pg { 0%,100%{box-shadow:0 0 0 0 color-mix(in srgb, var(--green) 25%, transparent)} 50%{box-shadow:0 0 0 5px transparent} }
+.st-proj {
+  background: color-mix(in srgb, var(--accent2) 12%, transparent);
+  color: var(--accent2);
+  border: 1px solid color-mix(in srgb, var(--accent2) 28%, transparent);
+}
+.ctype { font-size: 0.68rem; color: var(--subtle); font-family: var(--mono); }
+.ctitle { font-family: var(--serif); font-size: 1rem; font-weight: 600; line-height: 1.45; margin-bottom: 0.65rem; color: var(--text); }
+.cdesc { font-size: 0.82rem; color: var(--muted); line-height: 1.7; flex: 1; margin-bottom: 0.85rem; }
+.ctags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.85rem; }
+.ctags span {
+  font-size: 0.67rem; padding: 0.18rem 0.5rem; border-radius: 4px;
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  color: var(--accent-l); font-family: var(--mono);
+}
+.cfoot { border-top: 1px solid var(--border); padding-top: 0.7rem; display: flex; justify-content: space-between; align-items: center; }
+.cjournal { font-size: 0.72rem; color: var(--subtle); font-style: italic; }
+.ctitle-link {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.25s;
+}
+.ctitle-link:hover { color: var(--accent); }
+.cadv { font-size: 0.72rem; color: var(--subtle); }
+.cadv a { color: var(--accent2); }
+.cadv a:hover { text-decoration: underline; }
+
+/* ═══════════════════════════════════
+   S3 — RESOURCES
+═══════════════════════════════════ */
+.s-resources {
+  padding: var(--nav-h) 5rem 2rem;
+  display: flex; flex-direction: column;
+}
+.orb-g1 { width:500px; height:500px; background:var(--green); top:-100px; right:-120px; animation: od 16s ease-in-out infinite; }
+.s-resources .sec-label span:last-child { color: var(--green); }
+.s-resources .sec-bar { background: var(--green); }
+.s-resources .sec-header { margin-bottom: 1.2rem; position: relative; z-index: 1; }
+
+.res-body { flex: 1; min-height: 0; position: relative; z-index: 1; }
+.res-scroll {
+  height: 100%; overflow-y: auto; padding-right: 0.5rem;
+  scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+}
+.res-scroll::-webkit-scrollbar { width: 4px; }
+.res-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.courses-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 0.6rem; padding-bottom: 1rem; }
+
+.ccard {
+  background: var(--surf); border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden; transition: border-color 0.3s;
+}
+.ccard:hover { border-color: color-mix(in srgb, var(--green) 45%, transparent); }
+.ccard-head {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.65rem 1rem; width: 100%; text-align: left;
+  cursor: pointer; transition: background 0.2s;
+}
+.ccard-head:hover { background: var(--hover-bg); }
+.ccard-name { flex: 1; font-size: 0.88rem; font-weight: 600; color: var(--text); }
+.ccard-en { font-size: 0.72rem; color: var(--subtle); font-weight: 400; font-style: normal; margin-left: 0.4rem; }
+.ccard-count { font-family: var(--mono); font-size: 0.68rem; color: var(--subtle); background: var(--surf2); padding: 0.1rem 0.45rem; border-radius: 100px; }
+.ccard-arrow { color: var(--subtle); font-size: 0.75rem; transition: transform 0.3s; }
+.ccard.open .ccard-arrow { transform: rotate(180deg); }
+.ccard-body { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1); }
+.ccard.open .ccard-body { max-height: 600px; }
+.ccard-items { border-top: 1px solid var(--border); padding: 0.3rem 0; }
+.citem {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.4rem 1rem; gap: 0.5rem; transition: background 0.2s;
+}
+.citem:hover { background: var(--hover-bg); }
+.citem-title { font-size: 0.8rem; color: var(--muted); flex: 1; }
+.citem-links { display: flex; gap: 0.35rem; flex-shrink: 0; }
+.clink { font-size: 0.67rem; padding: 0.15rem 0.45rem; border-radius: 4px; font-family: var(--mono); font-weight: 700; transition: all 0.2s; }
+.clink.pdf { color: var(--coral); background: color-mix(in srgb, var(--coral) 10%, transparent); border: 1px solid color-mix(in srgb, var(--coral) 22%, transparent); }
+.clink.pdf:hover { background: color-mix(in srgb, var(--coral) 22%, transparent); }
+.clink.xmind { color: var(--accent2); background: color-mix(in srgb, var(--accent2) 10%, transparent); border: 1px solid color-mix(in srgb, var(--accent2) 22%, transparent); }
+.clink.xmind:hover { background: color-mix(in srgb, var(--accent2) 22%, transparent); }
+
+/* ═══════════════════════════════════
+   S4 — CONTACT
+═══════════════════════════════════ */
+.s-contact {
+  display: flex; align-items: center; justify-content: center;
+  padding: var(--nav-h) 5rem 2rem;
+}
+.orb-p1 { width:500px; height:500px; background:var(--coral); top:-120px; right:-80px; animation: od 13s ease-in-out infinite; }
+.orb-p2 { width:300px; height:300px; background:var(--accent); bottom:-80px; left:-60px; animation: od 9s ease-in-out infinite 2s; }
+
+.contact-layout {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 5rem; max-width: 1000px; width: 100%; position: relative; z-index: 1;
+}
+.contact-left { display: flex; flex-direction: column; justify-content: center; gap: 1rem; }
+.s-contact .sec-label span:last-child { color: var(--coral); }
+.s-contact .sec-bar { background: var(--coral); }
+.contact-head { font-family: var(--serif); font-size: clamp(3.5rem,7vw,5.5rem); line-height: 1.05; font-weight: 700; }
+.ch-accent { color: var(--accent); font-style: italic; }
+.contact-sub { color: var(--muted); font-size: 0.95rem; }
+.contact-bar { width: 48px; height: 3px; background: linear-gradient(90deg, var(--accent), var(--coral)); border-radius: 2px; }
+
+.contact-right { display: flex; flex-direction: column; justify-content: center; gap: 1.75rem; }
+.block-label { font-family: var(--mono); font-size: 0.72rem; color: var(--subtle); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 0.75rem; }
+.email-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.7rem 1rem; background: var(--surf); border: 1px solid var(--border);
+  border-radius: 10px; margin-bottom: 0.5rem; transition: all 0.3s;
+}
+.email-row:hover { border-color: color-mix(in srgb, var(--accent) 40%, transparent); background: color-mix(in srgb, var(--accent) 4%, transparent); }
+.email-info { display: flex; align-items: center; gap: 0.75rem; }
+.email-addr { font-family: var(--mono); font-size: 0.82rem; color: var(--text); }
+.email-tag { font-size: 0.65rem; color: var(--subtle); background: var(--surf2); padding: 0.12rem 0.4rem; border-radius: 4px; }
+.copy-btn {
+  font-size: 0.72rem; color: var(--subtle); transition: color 0.3s, border-color 0.3s;
+  padding: 0.25rem 0.6rem; border: 1px solid var(--border); border-radius: 5px;
+  background: transparent; font-family: var(--mono);
+}
+.copy-btn:hover { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+
+.social-links { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.slink {
+  display: flex; align-items: center; gap: 0.45rem;
+  padding: 0.55rem 0.9rem; background: var(--surf);
+  border: 1px solid var(--border); border-radius: 8px;
+  color: var(--muted); font-size: 0.82rem; transition: all 0.3s;
+}
+.slink:hover { color: var(--text); border-color: color-mix(in srgb, var(--accent) 50%, transparent); background: color-mix(in srgb, var(--accent) 6%, transparent); transform: translateY(-2px); }
+.sicon { width: 14px; height: 14px; flex-shrink: 0; }
+
+/* ═══════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════ */
+@media (max-width: 900px) {
+  .about-layout { padding: 0 2rem; flex-direction: column; justify-content: center; }
+  .about-right { display: none; }
+  .research-grid { grid-template-columns: 1fr; overflow-y: auto; }
+  .contact-layout { grid-template-columns: 1fr; gap: 2rem; }
+  .s-research, .s-resources, .s-contact { padding-left: 2rem; padding-right: 2rem; }
+  .courses-grid { grid-template-columns: 1fr; }
+  .dot-nav { display: none; }
+  .email-addr { font-size: 0.7rem; }
+}
+
+/* ═══════════════════════════════════
+   CUSTOM CURSOR
+═══════════════════════════════════ */
+.cur-dot {
+  position: fixed; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--accent); pointer-events: none; z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: background 0.3s, transform 0.12s;
+}
+.cur-ring {
+  position: fixed; width: 30px; height: 30px; border-radius: 50%;
+  border: 1.5px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  pointer-events: none; z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s, border-color 0.35s;
+}
+body.cursor-hover .cur-dot { transform: translate(-50%, -50%) scale(1.8); background: var(--accent2); }
+body.cursor-hover .cur-ring { width: 46px; height: 46px; border-color: color-mix(in srgb, var(--accent2) 55%, transparent); }
+@media (hover: none) { .cur-dot, .cur-ring { display: none; } }
+
+/* name shimmer on hover */
+.hero-name:hover .name-line {
+  background: linear-gradient(90deg, var(--text), var(--accent), var(--accent2), var(--text));
+  background-size: 200% auto;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 1.8s linear infinite;
+}
+@keyframes shimmer { to { background-position: 200% center; } }
 </style>
+
+<script is:inline>
+(function() {
+
+/* ── Particles ── */
+const canvas = document.getElementById('particles-canvas');
+const ctx = canvas.getContext('2d');
+let pts = [];
+
+function resize() {
+  const sec = document.getElementById('about');
+  canvas.width = sec.offsetWidth;
+  canvas.height = sec.offsetHeight;
+}
+
+function makePt() {
+  const hues = [260, 190, 320];
+  const op = Math.random() * 0.35 + 0.1;
+  const h = hues[Math.floor(Math.random() * 3)];
+  return {
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    vx: (Math.random() - 0.5) * 0.38,
+    vy: (Math.random() - 0.5) * 0.38,
+    r: Math.random() * 1.4 + 0.4,
+    color: `hsla(${h},80%,72%,${op})`
+  };
+}
+
+function init() { resize(); pts = Array.from({length: 75}, makePt); }
+
+function loop() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (let i = 0; i < pts.length; i++) {
+    const p = pts[i];
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = p.color; ctx.fill();
+    for (let j = i + 1; j < pts.length; j++) {
+      const q = pts[j];
+      const dx = p.x - q.x, dy = p.y - q.y;
+      const d = Math.sqrt(dx*dx + dy*dy);
+      if (d < 110) {
+        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y);
+        ctx.strokeStyle = `rgba(139,92,246,${0.06*(1-d/110)})`;
+        ctx.lineWidth = 0.5; ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(loop);
+}
+init(); loop();
+window.addEventListener('resize', init);
+
+/* ── Typewriter ── */
+const tw = document.getElementById('typewriter');
+const roles = ['Biostatistics', 'Causal Inference', 'AI for Public Health', 'Statistics'];
+let ri = 0, ci = 0, del = false;
+function type() {
+  const cur = roles[ri];
+  if (del) {
+    ci--; tw.textContent = cur.slice(0, ci);
+    if (ci === 0) { del = false; ri = (ri+1) % roles.length; setTimeout(type, 380); return; }
+    setTimeout(type, 48);
+  } else {
+    ci++; tw.textContent = cur.slice(0, ci);
+    if (ci === cur.length) { del = true; setTimeout(type, 2400); return; }
+    setTimeout(type, 88);
+  }
+}
+setTimeout(type, 900);
+
+/* ── Section tracking ── */
+const sc = document.getElementById('scroll-container');
+const secs = document.querySelectorAll('.section');
+const nlinks = document.querySelectorAll('.nav-link');
+const dots = document.querySelectorAll('.dot');
+
+function setActive(id) {
+  nlinks.forEach(l => l.classList.toggle('active', l.dataset.target === id));
+  dots.forEach(d => d.classList.toggle('active', d.dataset.section === id));
+}
+
+const so = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting && e.intersectionRatio >= 0.5) setActive(e.target.id); });
+}, { threshold: 0.5, root: sc });
+secs.forEach(s => so.observe(s));
+
+dots.forEach(d => {
+  d.addEventListener('click', () => document.getElementById(d.dataset.section).scrollIntoView({ behavior: 'smooth' }));
+});
+nlinks.forEach(l => {
+  l.addEventListener('click', e => {
+    const t = document.getElementById(l.dataset.target);
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+
+/* ── Reveal on scroll ── */
+const ro = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const items = e.target.querySelectorAll('.r-item,.rr,.rv,.cv');
+      items.forEach((el, i) => setTimeout(() => el.classList.add('on'), i * 80));
+      ro.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.15, root: sc });
+secs.forEach(s => ro.observe(s));
+
+setTimeout(() => {
+  document.querySelectorAll('#about .r-item').forEach((el, i) => {
+    setTimeout(() => el.classList.add('on'), 80 + i * 100);
+  });
+}, 120);
+
+/* ── 3D card tilt ── */
+document.querySelectorAll('.tilt').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    card.style.transform = `perspective(700px) rotateX(${y * -7}deg) rotateY(${x * 7}deg) scale(1.025)`;
+    card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+    card.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'perspective(700px) rotateX(0) rotateY(0) scale(1)';
+  });
+});
+
+/* ── Course accordion ── */
+document.querySelectorAll('.ccard-head').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const card = btn.closest('.ccard');
+    const open = card.classList.contains('open');
+    document.querySelectorAll('.ccard.open').forEach(c => c.classList.remove('open'));
+    if (!open) card.classList.add('open');
+  });
+});
+
+/* ── Copy email ── */
+document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    navigator.clipboard.writeText(btn.dataset.email).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = '✓ Copied';
+      btn.style.color = 'var(--green)';
+      setTimeout(() => { btn.textContent = orig; btn.style.color = ''; }, 2000);
+    });
+  });
+});
+
+/* ── Custom cursor ── */
+const curDot  = document.getElementById('cur-dot');
+const curRing = document.getElementById('cur-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  curDot.style.left = mx + 'px'; curDot.style.top = my + 'px';
+});
+(function trackRing() {
+  rx += (mx - rx) * 0.1; ry += (my - ry) * 0.1;
+  curRing.style.left = rx + 'px'; curRing.style.top = ry + 'px';
+  requestAnimationFrame(trackRing);
+})();
+document.querySelectorAll('a, button').forEach(el => {
+  el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+  el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+});
+
+/* ── Magnetic buttons ── */
+document.querySelectorAll('.btn-p, .btn-o').forEach(btn => {
+  btn.addEventListener('mousemove', e => {
+    const r = btn.getBoundingClientRect();
+    const x = (e.clientX - r.left - r.width  / 2) * 0.28;
+    const y = (e.clientY - r.top  - r.height / 2) * 0.38;
+    btn.style.transform = `translate(${x}px, ${y}px)`;
+  });
+  btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+});
+
+/* ── Orb parallax ── */
+const aboutSec = document.getElementById('about');
+const o1 = aboutSec.querySelector('.orb-1');
+const o2 = aboutSec.querySelector('.orb-2');
+aboutSec.addEventListener('mousemove', e => {
+  const { left, top, width, height } = aboutSec.getBoundingClientRect();
+  const px = (e.clientX - left) / width - 0.5;
+  const py = (e.clientY - top) / height - 0.5;
+  o1.style.transform = `translate(${px * 35}px, ${py * 35}px) scale(1)`;
+  o2.style.transform = `translate(${px * -22}px, ${py * -22}px) scale(1)`;
+});
+aboutSec.addEventListener('mouseleave', () => {
+  o1.style.transform = ''; o2.style.transform = '';
+});
+
+/* ── Blob avatar tilt + click ── */
+const avatarScene = document.getElementById('avatarScene');
+const avatarRing  = document.getElementById('avatarRing');
+const blobBorder  = document.getElementById('blobBorder');
+const blobGlow    = document.getElementById('blobGlow');
+if (avatarScene) {
+  avatarScene.addEventListener('mousemove', e => {
+    const r = avatarScene.getBoundingClientRect();
+    const mx = (e.clientX - r.left) / r.width;
+    const my = (e.clientY - r.top)  / r.height;
+    avatarRing.style.transform = `perspective(600px) rotateY(${(mx-.5)*10}deg) rotateX(${-(my-.5)*10}deg)`;
+  });
+  avatarScene.addEventListener('mouseleave', () => { avatarRing.style.transform = ''; });
+  avatarScene.addEventListener('click', () => {
+    [blobBorder, blobGlow].forEach(el => {
+      if (!el) return;
+      el.classList.remove('is-clicked');
+      void el.offsetWidth;
+      el.classList.add('is-clicked');
+      setTimeout(() => el.classList.remove('is-clicked'), 800);
+    });
+  });
+}
+
+/* ── Theme toggle ── */
+const themeBtn = document.getElementById('themeToggle');
+function setTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('theme', t);
+}
+themeBtn.addEventListener('click', () => {
+  document.body.classList.add('t-switching');
+  setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  setTimeout(() => document.body.classList.remove('t-switching'), 500);
+});
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme) {
+  setTheme(savedTheme);
+} else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  setTheme('dark');
+} else {
+  setTheme('light');
+}
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+  if (!localStorage.getItem('theme')) setTheme(e.matches ? 'dark' : 'light');
+});
+
+})();
+</script>
+
+</body>
+</html>
