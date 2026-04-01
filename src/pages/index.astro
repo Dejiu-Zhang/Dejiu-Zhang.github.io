@@ -1005,79 +1005,88 @@ html[data-theme="light"] .orb { opacity: 0.07; filter: blur(90px) saturate(0.35)
 
 /* ═══════════════════════════════════
    MOBILE  (≤ 600px)
+   Long single-column scroll page.
+   Scroll-snap is fully disabled.
+   Body is the scroll container.
+   Active nav link indicates section.
 ═══════════════════════════════════ */
 @media (max-width: 600px) {
 
-  /* ── Disable scroll-snap, use normal page scroll ── */
-  html, body { height: auto !important; overflow-y: auto !important; overflow-x: hidden; }
-  #scroll-container { height: auto !important; overflow-y: visible !important; scroll-snap-type: none !important; }
-  .section { height: auto !important; min-height: 100svh; scroll-snap-align: none !important; overflow: visible !important; }
+  /* ── Turn body into the scroller ── */
+  html { height: auto !important; overflow: visible !important; }
+  body { height: auto !important; overflow-x: hidden !important; overflow-y: auto !important; }
+  #scroll-container {
+    height: auto !important; overflow: visible !important;
+    scroll-snap-type: none !important;
+  }
+  .section {
+    height: auto !important; min-height: unset !important;
+    scroll-snap-align: none !important; overflow: visible !important;
+    padding-bottom: 3.5rem;
+  }
 
-  /* ── Navbar: shrink so all items fit ── */
-  .nav-inner { padding: 0 1rem; }
-  .nav-logo { font-size: 1.05rem; }
-  .nav-links { gap: 0.7rem; }
-  .nav-link { font-size: 0.68rem; letter-spacing: 0.04em; }
-  .theme-toggle { padding: 0.18rem 0.4rem; gap: 0.3rem; }
-  .tt-track { width: 22px; height: 12px; border-radius: 6px; }
+  /* ── Navbar: compact so all 4 links + toggle fit ── */
+  .nav-inner { padding: 0 0.9rem; }
+  .nav-logo { font-size: 1rem; }
+  .nav-links { gap: 0.6rem; }
+  .nav-link { font-size: 0.65rem; letter-spacing: 0.03em; }
+  .theme-toggle { padding: 0.15rem 0.35rem; gap: 0.25rem; }
+  .tt-track { width: 20px; height: 12px; border-radius: 6px; }
   .tt-knob { width: 8px; height: 8px; }
-  html[data-theme="light"] .tt-knob { transform: translateX(10px); }
+  html[data-theme="light"] .tt-knob { transform: translateX(8px); }
 
-  /* ── About ── */
-  .s-about { overflow: visible !important; }
+  /* ── About: avatar first, text below ── */
+  .s-about { padding-top: var(--nav-h); }
   .about-layout {
-    flex-direction: column;
-    align-items: center;
+    flex-direction: column; align-items: center;
     height: auto !important;
-    padding: calc(var(--nav-h) + 1.8rem) 1.4rem 3rem;
-    gap: 1.6rem;
+    padding: 2rem 1.3rem 0;
+    gap: 1.4rem;
   }
   .about-right {
-    display: flex; justify-content: center;
     order: 1; width: 100%; margin-right: 0;
+    display: flex; justify-content: center;
   }
-  .avatar-scene { max-width: 200px; }
+  .avatar-scene { max-width: 190px; }
   .chiikawa, .side-dots { display: none; }
   .about-left {
-    order: 2; top: 0 !important; max-width: 100%; width: 100%;
-    gap: 0.9rem; align-items: flex-start;
+    order: 2; top: 0 !important; max-width: 100%; width: 100%; gap: 0.85rem;
   }
   .greeting { display: none; }
-  .hero-name { font-size: clamp(2rem, 9vw, 2.5rem); }
-  .hero-role { font-size: 0.82rem; flex-wrap: nowrap; }
+  .hero-name { font-size: clamp(1.9rem, 8.5vw, 2.4rem); }
+  .hero-role { font-size: 0.8rem; flex-wrap: nowrap; }
   .role-pre { white-space: nowrap; }
-  .hero-bio { font-size: 0.88rem; line-height: 1.75; }
+  .hero-bio { font-size: 0.87rem; line-height: 1.75; }
   .hero-tags { gap: 0.4rem; }
-  .tag { font-size: 0.72rem; padding: 0.22rem 0.6rem; }
-  .hero-cta { flex-wrap: wrap; gap: 0.55rem; }
-  .btn { padding: 0.58rem 1.1rem; font-size: 0.8rem; }
+  .tag { font-size: 0.7rem; padding: 0.2rem 0.6rem; }
+  .hero-cta { flex-wrap: wrap; gap: 0.5rem; }
+  .btn { padding: 0.55rem 1rem; font-size: 0.79rem; }
   .scroll-hint { display: none; }
 
   /* ── Research ── */
   .s-research {
-    padding: calc(var(--nav-h) + 1.8rem) 1.4rem 3rem;
-    justify-content: flex-start; overflow-y: visible !important; height: auto !important;
+    padding-top: calc(var(--nav-h) + 1.5rem);
+    padding-left: 1.3rem; padding-right: 1.3rem;
+    justify-content: flex-start;
   }
   .research-grid { grid-template-columns: 1fr; gap: 1rem; max-height: none !important; }
   .s-research .sec-header { margin-bottom: 1rem; }
-  .sec-sub { white-space: normal !important; font-size: 0.85rem; }
 
   /* ── Resources ── */
-  .s-resources { padding: calc(var(--nav-h) + 1.5rem) 1.4rem 3rem; height: auto !important; }
-  .res-scroll { overflow-y: visible !important; max-height: none !important; padding-bottom: 0; }
-  .courses-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+  .s-resources { padding-top: calc(var(--nav-h) + 1.5rem); padding-left: 1.3rem; padding-right: 1.3rem; }
+  .res-scroll { overflow-y: visible !important; max-height: none !important; }
+  .courses-grid { grid-template-columns: 1fr; gap: 0.7rem; }
 
   /* ── Contact ── */
-  .s-contact { padding: calc(var(--nav-h) + 1.8rem) 1.4rem 3rem; height: auto !important; }
+  .s-contact { padding-top: calc(var(--nav-h) + 1.5rem); padding-left: 1.3rem; padding-right: 1.3rem; }
   .contact-layout { grid-template-columns: 1fr; gap: 1.5rem; }
-  .email-addr { font-size: 0.68rem; }
+  .email-addr { font-size: 0.67rem; }
 
-  /* ── Shared decorative (hide heavy elements) ── */
+  /* ── Shared ── */
   .dot-nav { display: none; }
-  .sec-title { font-size: clamp(1.8rem, 8vw, 2.4rem); }
-  .bg-num { display: none; }
-  .orb { display: none; }
-  #particles-canvas { display: none; }
+  .sec-title { font-size: clamp(1.75rem, 7.5vw, 2.2rem); }
+  .sec-sub { white-space: normal !important; font-size: 0.84rem; }
+  .bg-num, .orb, #particles-canvas { display: none; }
 }
 
 /* ═══════════════════════════════════
@@ -1185,11 +1194,9 @@ function type() {
 setTimeout(type, 900);
 
 /* ── Section tracking ── */
-const sc = document.getElementById('scroll-container');
 const secs = document.querySelectorAll('.section');
 const nlinks = document.querySelectorAll('.nav-link');
 const dots = document.querySelectorAll('.dot');
-const isMobile = () => window.innerWidth <= 600;
 
 function setActive(id) {
   nlinks.forEach(l => l.classList.toggle('active', l.dataset.target === id));
