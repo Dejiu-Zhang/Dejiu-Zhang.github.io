@@ -17,12 +17,14 @@ const papers = [
   {
     title: "Where Do Adolescent Digital Twins Succeed and Fail?",
     subtitle: "A Multi-layer Validation of Survey-Anchored Generative Agents",
-    status: "In Preparation",
-    statusColor: "mint", 
-    description: "We build survey-anchored adolescent “digital twins” from the 2023 YRBS and add narrative memory retrieved from real youth videos via retrieval-augmented generation. We evaluate realism across four checks (profile agreement, held-out domains, association networks, and live chats with 18–19-year-old participants at UC Berkeley), and we run in-silico replications of 10 published adolescent RCTs.",
+    status: "Under Review",
+    statusColor: "mint",
+    paperUrl: "https://www.researchgate.net/publication/400858210",
+    demoUrl: "https://aidigitalyouth.onrender.com",
+    description: "We build survey-anchored adolescent 'digital twins' from the 2023 YRBS and add narrative memory retrieved from real youth videos via retrieval-augmented generation. We evaluate realism across four checks (profile agreement, held-out domains, association networks, and live chats with 18-19-year-old participants at UC Berkeley), and we run in-silico replications of 10 published adolescent RCTs.",
     meta: [
-      "📅 2026",
-      "🎯 Target: Nature Human Behavior"
+      "2026",
+      "Nature Human Behaviour"
     ],
     advisor: "Prof. Jingshen Wang",
     advisorUrl: "https://sites.google.com/berkeley.edu/jingshenwang/"
@@ -31,10 +33,18 @@ const papers = [
 
 const projects = [
   {
+    title: "Nova — AI Research Guidance Platform",
+    description: "Browser-native AI platform with an 11-step LLM pipeline guiding students from topic selection through literature review, study design, and runnable analysis code. Statistical analysis runs in a Pyodide sandbox — zero setup needed. 37K+ LoC, built entirely with Claude Code.",
+    tags: ["Next.js", "Claude Code", "Pyodide", "LLM Pipeline", "RAG"],
+    colorClass: "sky",
+    url: "https://open-research-ruby.vercel.app/",
+    badge: "In Progress · Vibe Coding"
+  },
+  {
     title: "Sentiment-Driven Crypto Pricing",
     description: "Integrated Transformer models with Graph Neural Networks (GNNs) to predict crypto returns, incorporating sentiment analysis and liquidity factors.",
     tags: ["Deep Learning", "Quantitative Finance"],
-    colorClass: "yellow" 
+    colorClass: "yellow"
   }
 ];
 ---
@@ -50,19 +60,27 @@ const projects = [
             {papers.map((paper) => (
                 <div class="area-card">
                     <div class={`area-tag ${paper.statusColor}`}>{paper.status}</div>
-                    <h2>{paper.title}</h2>
+                    <h2>
+                        {paper.paperUrl
+                            ? <a href={paper.paperUrl} target="_blank" rel="noreferrer" class="paper-title-link">{paper.title} ↗</a>
+                            : paper.title
+                        }
+                    </h2>
                     {paper.subtitle && <h3 class="paper-sub">{paper.subtitle}</h3>}
-                    
+
                     <p class="area-description">
                         {paper.description}
+                        {paper.demoUrl && (
+                            <> &nbsp;<a href={paper.demoUrl} target="_blank" rel="noreferrer" class="demo-link">Live demo ↗</a></>
+                        )}
                     </p>
-                    
+
                     <div class="area-meta">
-                        {paper.meta.map((item) => (
-                            <span class="meta-item">{item}</span>
+                        {paper.meta.map((item: string) => (
+                            <span class="meta-item">📋 {item}</span>
                         ))}
                         <span class="meta-item">
-                            👥 Advisor: 
+                            👥 Advisor:
                             <a href={paper.advisorUrl} target="_blank" rel="noreferrer" class="advisor-link">
                                 {paper.advisor}
                             </a>
@@ -71,18 +89,24 @@ const projects = [
                 </div>
             ))}
         </section>
-        
+
         <section class="projects">
             <h2>Selected Projects</h2>
             <div class="projects-grid">
                 {projects.map((proj) => (
                     <div class={`project-card ${proj.colorClass}`}>
                         <div class="project-header">
-                            <h3>{proj.title}</h3>
+                            <h3>
+                                {proj.url
+                                    ? <a href={proj.url} target="_blank" rel="noreferrer" class="proj-title-link">{proj.title} ↗</a>
+                                    : proj.title
+                                }
+                            </h3>
+                            {proj.badge && <span class="proj-badge">{proj.badge}</span>}
                         </div>
                         <p>{proj.description}</p>
                         <div class="project-tags">
-                            {proj.tags.map((tag) => (
+                            {proj.tags.map((tag: string) => (
                                 <span class="tag">{tag}</span>
                             ))}
                         </div>
@@ -241,6 +265,46 @@ const projects = [
         display: flex;
         align-items: center;
         gap: 0.5rem;
+    }
+
+    .paper-title-link {
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 2px solid var(--coral);
+        transition: color 0.2s;
+    }
+    .paper-title-link:hover { color: var(--coral); }
+
+    .demo-link {
+        color: var(--mint);
+        font-family: monospace;
+        font-size: 0.9em;
+        font-weight: 700;
+        text-decoration: none;
+        border-bottom: 1px dashed var(--mint);
+        transition: opacity 0.2s;
+    }
+    .demo-link:hover { opacity: 0.75; }
+
+    .proj-title-link {
+        color: inherit;
+        text-decoration: none;
+        transition: opacity 0.2s;
+    }
+    .proj-title-link:hover { opacity: 0.75; }
+
+    .proj-badge {
+        display: inline-block;
+        font-family: monospace;
+        font-size: 0.75rem;
+        font-weight: 700;
+        background: rgba(0,0,0,0.12);
+        color: var(--dark);
+        padding: 0.2rem 0.7rem;
+        border-radius: 50px;
+        margin-left: 0.5rem;
+        vertical-align: middle;
+        font-style: italic;
     }
 
     .advisor-link {

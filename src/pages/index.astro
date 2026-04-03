@@ -241,25 +241,34 @@ const undergradCourses = [
             <div class="card-meta"><span class="cyear">2026</span><span class="cstatus st-prep">Under Review</span></div>
             <span class="ctype">Manuscript</span>
           </div>
-          <h3 class="ctitle">Where Do Adolescent Digital Twins Succeed and Fail?</h3>
-          <p class="cdesc">Survey-anchored adolescent "digital twins" built from 2023 YRBS with narrative memory via RAG. Multi-layer validation and in-silico replications of 10 published adolescent RCTs.</p>
+          <h3 class="ctitle"><a href="https://www.researchgate.net/publication/400858210" target="_blank" rel="noopener" class="ctitle-link">Where Do Adolescent Digital Twins Succeed and Fail? ↗</a></h3>
+          <p class="cdesc">Survey-anchored adolescent "digital twins" built from 2023 YRBS with narrative memory via RAG. Multi-layer validation and in-silico replications of 10 published adolescent RCTs. <a href="https://aidigitalyouth.onrender.com" target="_blank" rel="noopener" class="cdesc-link">Live demo ↗</a></p>
           <div class="ctags"><span>LLM Agents</span><span>Public Health</span><span>RAG</span></div>
           <div class="cfoot">
-            <span class="cjournal">npj Digital Medicine</span>
+            <span class="cjournal">Nature Human Behaviour</span>
             <span class="cadv">Adv: <a href="https://sites.google.com/berkeley.edu/jingshenwang/" target="_blank" rel="noopener">Prof. Jingshen Wang</a></span>
           </div>
         </div>
       </div>
 
-      <div class="rcard tilt rr" style="--d:0.24s">
-        <div class="card-glow card-glow-y"></div>
-        <div class="card-inner">
+      <div class="rcard nova-card tilt rr" style="--d:0.24s">
+        <div class="nova-bg-mesh"></div>
+        <div class="card-inner nova-inner">
           <div class="card-top">
-            <div class="card-meta"><span class="cstatus st-proj">Project</span></div>
+            <div class="card-meta">
+              <span class="cstatus nb-live">● Live</span>
+              <span class="cstatus nb-vibe">Vibe Coding</span>
+            </div>
+            <span class="ctype">Side Project</span>
           </div>
-          <h3 class="ctitle">Sentiment-Driven Crypto Pricing</h3>
-          <p class="cdesc">Integrated Transformer models with Graph Neural Networks (GNNs) to predict crypto returns, incorporating sentiment analysis and liquidity factors.</p>
-          <div class="ctags"><span>Deep Learning</span><span>GNN</span><span>Quant Finance</span></div>
+          <span class="nova-wordmark">Nova</span>
+          <p class="nova-tagline">AI Research Guidance Platform</p>
+          <p class="cdesc">An AI research mentor that turns <em>"I have data but no idea what to study"</em> into a complete, publishable project — for high schoolers and undergrads who can't access traditional mentorship. Answer a few questions, get a tailored research plan, and run all analysis directly in the browser. <strong>No setup, no server, no professor required.</strong></p>
+          <div class="ctags nova-stack"><span>Next.js</span><span>Claude Code</span><span>Pyodide</span><span>RAG</span></div>
+          <a href="https://open-research-ruby.vercel.app/" target="_blank" rel="noopener" class="nova-cta">
+            <span class="nova-cta-text">Visit Platform</span>
+            <span class="nova-cta-arrow">→</span>
+          </a>
         </div>
       </div>
     </div>
@@ -879,6 +888,87 @@ html[data-theme="light"] .orb { opacity: 0.07; filter: blur(90px) saturate(0.35)
 .cadv { font-size: 0.72rem; color: var(--subtle); }
 .cadv a { color: var(--accent2); }
 .cadv a:hover { text-decoration: underline; }
+.cdesc-link { color: var(--accent2); font-family: var(--mono); font-size: 0.75em; border-bottom: 1px solid color-mix(in srgb, var(--accent2) 35%, transparent); transition: border-color 0.2s, color 0.2s; }
+.cdesc-link:hover { color: var(--accent-l); border-color: var(--accent-l); }
+
+.nb-live {
+  background: color-mix(in srgb, var(--green) 12%, transparent);
+  color: var(--green);
+  border: 1px solid color-mix(in srgb, var(--green) 30%, transparent);
+  animation: pg 2.5s ease-in-out infinite;
+}
+.nb-vibe {
+  background: color-mix(in srgb, var(--coral) 10%, transparent);
+  color: var(--coral); font-style: italic;
+  border: 1px solid color-mix(in srgb, var(--coral) 25%, transparent);
+}
+
+/* ── Nova card special visuals ── */
+.nova-card {
+  border-color: color-mix(in srgb, var(--accent2) 30%, transparent) !important;
+  animation: nova-pulse 4s ease-in-out infinite;
+}
+@keyframes nova-pulse {
+  0%,100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent2) 0%, transparent); }
+  50%      { box-shadow: 0 0 24px color-mix(in srgb, var(--accent2) 20%, transparent); }
+}
+.nova-card:hover {
+  border-color: color-mix(in srgb, var(--accent2) 60%, transparent) !important;
+  box-shadow: 0 0 36px color-mix(in srgb, var(--accent2) 22%, transparent), 0 20px 50px color-mix(in srgb, var(--bg) 50%, transparent) !important;
+  transform: translateY(-3px);
+  animation: none;
+}
+.nova-bg-mesh {
+  position: absolute; inset: 0; pointer-events: none; opacity: 0.05;
+  background:
+    repeating-linear-gradient(0deg, transparent, transparent 22px, var(--accent2) 22px, var(--accent2) 23px),
+    repeating-linear-gradient(90deg, transparent, transparent 22px, var(--accent2) 22px, var(--accent2) 23px);
+  transition: opacity 0.4s;
+}
+.nova-card:hover .nova-bg-mesh { opacity: 0.09; }
+.nova-inner { gap: 0.7rem; }
+.nova-wordmark {
+  font-family: var(--serif); font-size: 1.9rem; font-weight: 700;
+  line-height: 1; letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--accent2), color-mix(in srgb, var(--accent2) 55%, var(--accent)));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  display: block;
+}
+.nova-tagline { font-size: 0.75rem; color: var(--muted); font-weight: 500; margin-top: -0.2rem; }
+.nova-inner .cdesc em { font-style: italic; color: var(--accent2); font-family: var(--serif); }
+.nova-inner .cdesc strong { color: var(--text); font-weight: 600; }
+.nova-stats {
+  display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; flex-shrink: 0;
+}
+.nova-stat {
+  flex: 1; padding: 0.5rem 0.3rem; text-align: center;
+  display: flex; flex-direction: column; gap: 0.15rem;
+  border-right: 1px solid var(--border);
+  background: color-mix(in srgb, var(--accent2) 4%, transparent);
+}
+.nova-stat:last-child { border-right: none; }
+.ns-val { font-family: var(--mono); font-size: 0.95rem; font-weight: 700; color: var(--accent2); }
+.ns-lab { font-size: 0.55rem; color: var(--subtle); letter-spacing: 0.04em; text-transform: uppercase; }
+.nova-stack span {
+  background: color-mix(in srgb, var(--accent2) 10%, transparent) !important;
+  color: var(--accent2) !important;
+  border: 1px solid color-mix(in srgb, var(--accent2) 22%, transparent) !important;
+}
+.nova-cta {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.55rem 0.8rem; border-radius: 7px; margin-top: auto;
+  background: color-mix(in srgb, var(--accent2) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent2) 28%, transparent);
+  transition: background 0.3s, border-color 0.3s;
+  text-decoration: none;
+}
+.nova-card:hover .nova-cta {
+  background: color-mix(in srgb, var(--accent2) 18%, transparent);
+  border-color: color-mix(in srgb, var(--accent2) 50%, transparent);
+}
+.nova-cta-text { font-size: 0.78rem; font-weight: 600; color: var(--accent2); font-family: var(--mono); }
+.nova-cta-arrow { font-size: 0.9rem; color: var(--accent2); transition: transform 0.3s; }
+.nova-card:hover .nova-cta-arrow { transform: translateX(4px); }
 
 /* ═══════════════════════════════════
    S3 — RESOURCES
