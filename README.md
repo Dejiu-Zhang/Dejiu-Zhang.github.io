@@ -1,43 +1,31 @@
-# Astro Starter Kit: Minimal
+# Yueshan Zhang — Personal archive
+
+The live homepage is https://dejiu-zhang.github.io/.
+
+## Current homepage
+
+The five-disc homepage lives in `site/`. It includes the opening animation, About, Research, Publications & Projects, Memory, and Contact. The page is static and needs no runtime service.
+
+- Edit chapter content in `site/profile.js`.
+- Edit publications and projects in `site/works.js`.
+- Edit the Memory timeline in `site/timeline.js` and its notes in `site/memory-notes.js`.
+- Keep photographs in `site/assets/`.
+
+Build the exact GitHub Pages output with Node 20 or later:
 
 ```sh
-npm create astro@latest -- --template minimal
+node scripts/build-pages.mjs
+python3 -m http.server 4173 --directory dist
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+GitHub Actions builds and publishes `dist/` on pushes to `main`. Only `site/`, `public/cv.pdf`, and `public/resources/` enter the live output. Existing document URLs stay valid; old chapter routes redirect into the new homepage. The “Browse all undergraduate notes” link opens the complete notes folder on GitHub.
 
-## 🚀 Project Structure
+## Previous homepage — retained, not deployed
 
-Inside of your Astro project, you'll see the following folders and files:
+The former Astro website is deliberately preserved in `src/`, alongside its original `public/` assets, package files, and Astro configuration. The current Pages workflow does **not** build or upload those pages, and there is no link to the old homepage in the live navigation.
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+The complete pre-migration repository is also retained on the branch [`archive/pre-disc-homepage-2026-09-22`](https://github.com/Dejiu-Zhang/Dejiu-Zhang.github.io/tree/archive/pre-disc-homepage-2026-09-22), starting at commit `fea9612960c98ab76666153fd36190cdcd6002d4`.
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+To preview the previous website locally, use `npm ci` and `npm run dev`. The existing `npm run build` command still builds the old Astro site for recovery or comparison; it is intentionally not used for deployment.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+To restore the previous production homepage, restore `.github/workflows/deploy.yml` from the archive branch and commit that change to `main`. Its original source and assets remain present, so the restored workflow can build them again without deleting the new `site/` directory.
