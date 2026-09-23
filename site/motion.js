@@ -27,7 +27,7 @@ export function initializeMotion(reader){
  const message=contact.querySelector('.contact-message');stage.appendChild(message);contact.appendChild(stage);
  stage.insertAdjacentHTML('afterbegin','<div class="poster-wall" aria-hidden="true"></div><div class="contact-wash" aria-hidden="true"></div><div class="contact-prelude"><span>05 / CONTACT</span><p>Always happy to chat.</p></div>');
  stage.insertAdjacentHTML('beforeend','<footer><span>Olivia Zhang · Berkeley, CA</span><a href="./credits.html" target="_blank" rel="noopener">Photo credits</a><a href="#top" aria-label="Return to the disc gallery">Back to the discs ↑</a></footer>');
- // The wall is made from this portfolio’s own typographic research and project covers.
+ // The wall is made from this portfolio’s own covers, campus views, and moments from the Memory timeline.
  const wall=$('.poster-wall');
  const wallDesigns=[
   ['citrus','Causal inference','The city, in motion.','NYC · Transportation · 2026'],
@@ -35,10 +35,22 @@ export function initializeMotion(reader){
   ['olive','Open research','Nova','Learn. Question. Discover.'],
   ['coral','Biostatistics','Better questions.','Olivia Zhang · UC Berkeley'],
   ['cream','Mathematics','From ideas to evidence.','Causal inference · Public health'],
-  ['portrait-poster','Olivia Zhang','', 'Dejiu · Berkeley, CA']
+  ['cream','AI evaluation','Past labels, sharper answers.','HERO · 2026']
  ];
- const campusPhotos=[['memorial-glade.avif','Memorial Glade'],['bay-from-tower.avif','The Bay from Berkeley'],['campanile-clock.avif','The Campanile'],['wheeler-hall.avif','Wheeler Hall'],['campanile-way.avif','Campanile Way']];
- for(let i=0;i<30;i++){const el=document.createElement('div');if(i%3!==2){const photo=campusPhotos[(i+Math.floor(i/6))%campusPhotos.length];el.className='wall-poster campus-poster';el.innerHTML=`<img src="./assets/${photo[0]}" alt="" loading="lazy"><span>${photo[1]}</span>`;}else{const d=wallDesigns[(i+Math.floor(i/6))%5];el.className=`wall-poster ${d[0]}`;el.innerHTML=`<span class="poster-topic">${d[1]}</span><strong>${d[2]}</strong><span class="poster-note">${d[3]}</span>`;}wall.appendChild(el);}
+ const wallPhotos=[['memorial-glade.avif','Memorial Glade'],['nankai-friends.jpg','Nankai · Best friends'],['campanile-clock.avif','The Campanile'],['nankai-graduation-2026.jpg','Commencement · 2026','50% 30%'],['bay-from-tower.avif','The Bay from Berkeley'],['wheeler-hall.avif','Wheeler Hall'],['berkeley-2026.jpg','UC Berkeley · Spring 2025'],['campanile-way.avif','Campanile Way']];
+ // Each tile, from the middle of the screen outward, takes the image whose nearest copy is farthest away, so repeats sit well apart.
+ const cols=getComputedStyle(wall).gridTemplateColumns.split(' ').length,tiles=30,picks=Array(tiles).fill(null);
+ const els=Array.from({length:tiles},()=>wall.appendChild(document.createElement('div')));els.forEach(el=>el.className='wall-poster');
+ // Distances to the middle of the screen are taken after the wall's −7° tilt, in screen widths and heights so a tall phone counts its rows.
+ const frame=stage.getBoundingClientRect(),box=wall.getBoundingClientRect(),tilt=-7*Math.PI/180,cx=box.left+box.width/2,cy=box.top+box.height/2;
+ const centre=els.map(el=>{const r=el.getBoundingClientRect(),x=r.left+r.width/2-cx,y=r.top+r.height/2-cy;return Math.hypot((cx+x*Math.cos(tilt)-y*Math.sin(tilt)-frame.left)/frame.width-.5,(cy+x*Math.sin(tilt)+y*Math.cos(tilt)-frame.top)/frame.height-.5);});
+ const order=[...Array(tiles).keys()].sort((a,b)=>centre[a]-centre[b]||a-b);
+ const pool=[...wallPhotos,...wallDesigns],gap=(a,b)=>Math.hypot(a%cols-b%cols,(Math.floor(a/cols)-Math.floor(b/cols))*1.33);
+ order.forEach(i=>{const near=picks.map((p,j)=>p&&gap(i,j)<1.5?p:null).filter(Boolean),photosNear=near.filter(p=>wallPhotos.includes(p)).length;
+  const wantPhoto=photosNear<=near.length/2;
+  const score=p=>{const d=Math.min(9,...picks.map((q,j)=>q===p?gap(i,j):9));return d*10+(wallPhotos.includes(p)===wantPhoto?1:0);};
+  picks[i]=pool.reduce((best,p)=>score(p)>score(best)?p:best);});
+ picks.forEach((p,i)=>{const el=els[i];if(wallPhotos.includes(p)){el.className='wall-poster campus-poster';el.innerHTML=`<img src="./assets/${p[0]}" alt="" loading="lazy"${p[2]?` style="object-position:${p[2]}"`:''}><span>${p[1]}</span>`;}else{el.className=`wall-poster ${p[0]}`;el.innerHTML=`<span class="poster-topic">${p[1]}</span><strong>${p[2]}</strong><span class="poster-note">${p[3]}</span>`;}});
 
  const revealNodes=[...document.querySelectorAll('#about .body-copy,#about .profile-details,#about .inline-links,#research .entry,#research .lead')];
  revealNodes.forEach(n=>n.classList.add('scroll-reveal'));
