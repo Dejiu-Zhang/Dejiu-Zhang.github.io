@@ -23,8 +23,8 @@ for (const [route, chapter] of Object.entries({
   await mkdir(join(output, route), { recursive: true });
   await writeFile(join(output, route, 'index.html'), `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Yueshan Zhang</title><meta http-equiv="refresh" content="0;url=${destination}">
+<title>Olivia Zhang</title><meta http-equiv="refresh" content="0;url=${destination}">
 <link rel="canonical" href="https://dejiu-zhang.github.io/${destination.slice(1)}"></head>
-<body><a href="${destination}">Continue to Yueshan’s homepage</a></body></html>\n`);
+<body><a href="${destination}">Continue to Olivia’s homepage</a></body></html>\n`);
 }
 console.log('Built the disc homepage, CV, original notes, and chapter redirects in dist/.');

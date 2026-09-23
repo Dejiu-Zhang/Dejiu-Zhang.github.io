@@ -18,7 +18,7 @@ node scripts/build-pages.mjs
 python3 -m http.server 4173 --directory dist
 ```
 
-GitHub Actions builds and publishes `dist/` on pushes to `main`. Only `site/`, `public/cv.pdf`, and `public/resources/` enter the live output. Existing document URLs stay valid; old chapter routes redirect into the new homepage. The “Browse all undergraduate notes” link opens the complete notes folder on GitHub.
+GitHub Actions builds and publishes `dist/` on pushes to `main`. Only `site/`, `public/cv.pdf`, and `public/resources/` enter the live output. Existing document URLs stay valid; old chapter routes redirect into the new homepage. The Memory timeline lists every undergraduate note, grouped by course as on the previous Resources page.
 
 ## Previous homepage — retained, not deployed
 

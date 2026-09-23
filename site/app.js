@@ -76,7 +76,7 @@ let width=0,height=0,mobile=false,position=0,current=0,hover=-1,lastTime=perform
 const pointer=new THREE.Vector2(),raycaster=new THREE.Raycaster(),inverseGallery=gallery.quaternion.clone().invert();
 const smooth=t=>{t=clamp(t,0,1);return t*t*t*(t*(t*6-15)+10);};
 $('#chapters').innerHTML=items.map(item=>`<section id="${item.id}" class="chapter ${item.id}" aria-labelledby="title-${item.id}"><div class="chapter-label">${item.kicker}</div><div class="chapter-content"><h2 id="title-${item.id}" tabindex="-1">${item.heading}</h2><div class="section-copy">${item.body}</div></div></section>`).join('');
-$('#about .chapter-content').insertAdjacentHTML('afterbegin','<figure class="portrait"><img src="./assets/portrait.png" alt="Yueshan Zhang" width="600" height="750"><figcaption>Yueshan Zhang · Dejiu</figcaption></figure>');
+$('#about .chapter-content').insertAdjacentHTML('afterbegin','<figure class="portrait"><img src="./assets/portrait.png" alt="Olivia Zhang traveling in Yunnan" width="600" height="750"><figcaption>Traveling in Yunnan · Photo by my friend Leyao</figcaption></figure>');
 let smoothScroll=reduced.matches?null:new Lenis({lerp:.09,smoothWheel:true,syncTouch:false,autoRaf:false});
 const reader=createBookReader({stopScroll:()=>smoothScroll?.stop(),startScroll:()=>smoothScroll?.start(),reduced});
 const motionFrame=initializeMotion(reader);
