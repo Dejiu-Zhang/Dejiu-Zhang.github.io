@@ -1,6 +1,6 @@
 // Profile information adapted from https://dejiu-zhang.github.io/.
 const link = (url, text) => `<a href="${url}" target="_blank" rel="noopener noreferrer">${text}</a>`;
-const wang = link('https://sites.google.com/berkeley.edu/jingshenwang/', 'Prof. Jingshen Wang');
+const wang = link('https://jswangberkeley.github.io/', 'Prof. Jingshen Wang');
 const wu = link('https://sites.google.com/view/manxi-wu/home', 'Prof. Manxi Wu');
 const paper = 'https://www.sciencedirect.com/science/article/abs/pii/S0965856426001072';
 const twins = 'https://www.researchgate.net/publication/400858210';
