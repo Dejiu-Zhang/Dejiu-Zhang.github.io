@@ -5,7 +5,7 @@ import { RectAreaLightUniformsLib } from './vendor/RectAreaLightUniformsLib.js';
 const $ = (s) => document.querySelector(s);
 const clamp = (x,a,b) => Math.min(b,Math.max(a,x));
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-import { profile, items } from './profile.js';
+import { profile, items, discArt } from './profile.js?v=disc-20260924';
 import { initializeMotion } from './motion.js?v=motion-20260922';
 import { createBookReader } from './book-reader.js';
 import { works } from './works.js';
@@ -38,18 +38,55 @@ const env=canvas();env.height=512;const ec=env.getContext('2d');ec.fillStyle='#2
 for(const [y,width,strength] of [[.14,.07,1],[.4,.05,.6],[.26,.08,.85],[.62,.035,.35]]){const g=ec.createLinearGradient(0,(y-width)*512,0,(y+width)*512);g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(.5,`rgba(255,255,255,${strength*.85})`);g.addColorStop(1,'rgba(255,255,255,0)');ec.fillStyle=g;ec.fillRect(0,(y-width)*512,1024,width*1024);}
 const et=texture(env);et.mapping=THREE.EquirectangularReflectionMapping;const pmrem=new THREE.PMREMGenerator(renderer);scene.environment=pmrem.fromEquirectangular(et).texture;et.dispose();pmrem.dispose();
 
+// A printed, lived-in face: faint ink mottling, fine grain and a few hairline scratches.
+// Seeded per disc, so each one wears the same way on every visit.
+function wear(ctx,seed){
+  let s=(seed+1)*48271%2147483647;const rnd=()=>(s=s*16807%2147483647)/2147483647;
+  const m=canvas(24),mc=m.getContext('2d'),md=mc.createImageData(24,24);
+  for(let i=0;i<md.data.length;i+=4){md.data[i]=md.data[i+1]=md.data[i+2]=128+(rnd()-.5)*120;md.data[i+3]=255;}
+  mc.putImageData(md,0,0);ctx.save();ctx.globalCompositeOperation='soft-light';ctx.globalAlpha=.35;ctx.drawImage(m,0,0,1024,1024);ctx.restore();
+  const d=ctx.getImageData(0,0,1024,1024),p=d.data;
+  for(let i=0;i<p.length;i+=4){const g=(rnd()-.5)*26;p[i]+=g;p[i+1]+=g;p[i+2]+=g;}
+  ctx.putImageData(d,0,0);
+  ctx.save();ctx.globalCompositeOperation='screen';ctx.lineCap='round';
+  for(let k=0;k<46;k++){
+   const r=150+rnd()*340,a=rnd()*Math.PI*2;ctx.strokeStyle=`rgba(255,255,255,${.04+rnd()*.09})`;ctx.lineWidth=.6+rnd()*.9;ctx.beginPath();
+   if(rnd()<.7)ctx.arc(512,512,r,a,a+.05+rnd()*.35);
+   else{const x=512+Math.cos(a)*r,y=512+Math.sin(a)*r,b=rnd()*Math.PI,l=20+rnd()*90;ctx.moveTo(x,y);ctx.lineTo(x+Math.cos(b)*l,y+Math.sin(b)*l);}
+   ctx.stroke();}
+  ctx.restore();
+}
 function labelTexture(item,index){
-  const c=canvas(),ctx=c.getContext('2d');ctx.fillStyle=item.color;ctx.fillRect(0,0,1024,1024);
+  const c=canvas(),ctx=c.getContext('2d'),t=texture(c),art=discArt[item.id];
+  const plain=()=>{ctx.fillStyle=item.color;ctx.fillRect(0,0,1024,1024);
   ctx.fillStyle=item.ink;ctx.textAlign='center';ctx.font='15px Arial';ctx.letterSpacing='4px';ctx.fillText('P E R S O N A L   /   A R C H I V E',512,88);
   ctx.letterSpacing='0px';ctx.font=`${index===0?'italic ':''}${item.fontSize||120}px "Times New Roman"`;
   ctx.fillText(item.words[0],512,item.words.length>1?270:326,780);
   if(item.words.length>1){ctx.font='88px "Times New Roman"';ctx.fillText(item.words[1],512,365,720);}
   ctx.font='240px "Times New Roman"';ctx.globalAlpha=.8;ctx.fillText(String(index+1).padStart(2,'0'),512,823);ctx.globalAlpha=1;
-  ctx.font='15px Arial';ctx.fillText(item.subtitle.toUpperCase()+'  /  0'+(index+1),512,917);
-  return texture(c);
+  ctx.font='15px Arial';ctx.fillText(item.subtitle.toUpperCase()+'  /  0'+(index+1),512,917);};
+  plain();
+  if(!art)return t;
+  // Once the still arrives the face is redrawn: cover-fit, the preview's crop, an edge shade, then white type.
+  const img=new Image();img.decoding='async';
+  img.onload=()=>{
+   const f={pos:[.5,.5],scale:1,tx:0,ty:0,...art.frame},k=Math.max(1024/img.naturalWidth,1024/img.naturalHeight),w=img.naturalWidth*k,h=img.naturalHeight*k;
+   const x=512+f.scale*((1024-w)*f.pos[0]+f.tx*1024-512),y=512+f.scale*((1024-h)*f.pos[1]+f.ty*1024-512);
+   ctx.clearRect(0,0,1024,1024);ctx.filter='saturate(.9) contrast(.97) sepia(.07)';ctx.drawImage(img,x,y,w*f.scale,h*f.scale);ctx.filter='none';
+   const shade=ctx.createRadialGradient(512,512,0,512,512,498);shade.addColorStop(0,'rgba(0,0,0,0)');shade.addColorStop(.3,'rgba(0,0,0,0)');shade.addColorStop(.7,'rgba(0,0,0,.15)');shade.addColorStop(1,'rgba(0,0,0,.35)');
+   ctx.fillStyle=shade;ctx.fillRect(0,0,1024,1024);
+   ctx.fillStyle='#fff';ctx.textAlign='center';ctx.shadowColor='rgba(0,0,0,.62)';ctx.shadowBlur=26;ctx.shadowOffsetY=3;
+   ctx.font='15px Arial';ctx.letterSpacing='4px';ctx.fillText('P E R S O N A L   /   A R C H I V E',512,88);ctx.letterSpacing='0px';
+   ctx.font='italic 124px "Times New Roman"';ctx.fillText(item.words[0],512,250,800);
+   ctx.font='198px "Times New Roman"';ctx.fillText(String(index+1).padStart(2,'0'),512,862);
+   ctx.font='15px Arial';ctx.letterSpacing='3px';ctx.fillText(art.title.toUpperCase()+'  /  0'+(index+1),512,935);
+   ctx.shadowColor='transparent';wear(ctx,index);
+   t.needsUpdate=true;};
+  img.src=art.src;
+  return t;
 }
 const roughCanvas=canvas(512),rc=roughCanvas.getContext('2d'),rd=rc.createImageData(512,512);
-for(let i=0;i<rd.data.length;i+=4){const n=215+Math.random()*32;rd.data[i]=rd.data[i+1]=rd.data[i+2]=n;rd.data[i+3]=255;}rc.putImageData(rd,0,0);const roughMap=texture(roughCanvas,false);
+for(let i=0;i<rd.data.length;i+=4){const n=215+Math.random()*32;rd.data[i]=rd.data[i+1]=rd.data[i+2]=n;rd.data[i+3]=255;}rc.putImageData(rd,0,0);rc.lineCap='round';for(let k=0;k<70;k++){const r=40+Math.random()*215,a=Math.random()*Math.PI*2;rc.strokeStyle=`rgba(255,255,255,${.25+Math.random()*.35})`;rc.lineWidth=.5+Math.random()*.6;rc.beginPath();rc.arc(256,256,r,a,a+.05+Math.random()*.4);rc.stroke();}const roughMap=texture(roughCanvas,false);
 const radial=canvas(1024),rad=radial.getContext('2d');rad.fillStyle='#b5b5b5';rad.fillRect(0,0,1024,1024);
 for(let r=75;r<512;r+=.85){rad.strokeStyle=`rgba(${Math.random()>.5?'255,255,255':'0,0,0'},.13)`;rad.lineWidth=.6;rad.beginPath();rad.arc(512,512,r,0,Math.PI*2);rad.stroke();}const radialMap=texture(radial,false);
 const faceGeo=new THREE.RingGeometry(.24,.974,192);const pos=faceGeo.attributes.position,uv=faceGeo.attributes.uv;for(let i=0;i<pos.count;i++)uv.setXY(i,pos.getX(i)*.5+.5,pos.getY(i)*.5+.5);
@@ -116,6 +153,28 @@ root.addEventListener('pointerdown',e=>{if(e.button!==0||flight||e.target.closes
 root.addEventListener('pointerup',e=>{const press=down;down=null;if(press&&Math.hypot(e.clientX-press.x,e.clientY-press.y)<7&&press.i>=0)openSection(press.i);});
 root.addEventListener('pointercancel',()=>down=null);root.addEventListener('pointerleave',()=>{hover=-1;down=null;galleryMouse=null;});
 root.addEventListener('keydown',e=>{if(e.target!==root)return;if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();navigate(clamp(current+(e.key==='ArrowRight'?1:-1),0,total-1));}else if(e.key==='Enter'){e.preventDefault();openSection(current);}});
+// Sideways gestures move the gallery as well: swiping left advances like scrolling down, swiping right goes back.
+const inGallery=()=>entered&&!reader.isOpen&&!flight&&scrollY<intro.offsetTop+intro.offsetHeight-height;
+// Lenis reads horizontal wheel deltas as scroll only while the gallery is on screen; elsewhere sideways swipes stay inert.
+addEventListener('wheel',e=>{
+ const sideways=!e.ctrlKey&&Math.abs(e.deltaX)>Math.abs(e.deltaY)&&inGallery();
+ if(smoothScroll){smoothScroll.options.gestureOrientation=sideways?'both':'vertical';return;}
+ if(sideways){e.preventDefault();window.scrollBy(0,e.deltaMode===1?e.deltaX*16:e.deltaX);}
+},{passive:false,capture:true});
+let swipe=null;
+root.addEventListener('touchstart',e=>{if(e.touches.length!==1||!inGallery()){swipe=null;return;}const t=e.touches[0];swipe={x:t.clientX,y:t.clientY,lastX:t.clientX,axis:null,from:scrollY};},{passive:true});
+root.addEventListener('touchmove',e=>{
+ if(!swipe)return;const t=e.touches[0],dx=t.clientX-swipe.x,dy=t.clientY-swipe.y;
+ if(!swipe.axis){if(Math.hypot(dx,dy)<8)return;swipe.axis=Math.abs(dx)>Math.abs(dy)?'x':'y';}
+ if(swipe.axis!=='x')return;
+ e.preventDefault();swipe.lastX=t.clientX;window.scrollTo(0,swipe.from-dx*1.6);
+},{passive:false});
+root.addEventListener('touchend',()=>{
+ if(swipe?.axis==='x'){const dx=swipe.lastX-swipe.x,at=(scrollY-intro.offsetTop)/((intro.offsetHeight-height)/span);
+  navigate(clamp(Math.abs(dx)<30?Math.round(at):dx<0?Math.ceil(at-.05):Math.floor(at+.05),0,total-1));}
+ swipe=null;
+});
+root.addEventListener('touchcancel',()=>swipe=null);
 function render(now){
  requestAnimationFrame(render);smoothScroll?.raf(now);if(document.hidden){lastTime=now;return;}const dt=Math.min(.05,(now-lastTime)/1000);lastTime=now;
  const rect=root.getBoundingClientRect(),target=entered?clamp(scrollY/(intro.offsetHeight-height)*span,0,span):0;position+=(target-position)*(reduced.matches?1:1-Math.exp(-dt*9));current=clamp(Math.round(position),0,total-1);root.dataset.activeIndex=current;root.dataset.position=position.toFixed(3);

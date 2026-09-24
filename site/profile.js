@@ -6,6 +6,15 @@ const paper = 'https://www.sciencedirect.com/science/article/abs/pii/S0965856426
 const twins = 'https://www.researchgate.net/publication/400858210';
 const nova = 'https://nova-discovery-lab.vercel.app/';
 export const profile = {name:'Olivia Zhang',subtitle:'Biostatistics · UC Berkeley',description:'Olivia (Yueshan) Zhang — Biostatistics at UC Berkeley. Research in causal inference and AI for public health.'};
+// Disc faces: a film or series still per chapter. frame reproduces the CSS crop chosen in the preview:
+// pos is object-position, then the image is scaled about the centre and shifted by tx/ty (fractions of the disc).
+export const discArt = {
+ about:{src:'./assets/disc-about.jpg',title:'La La Land',frame:{pos:[.5,.3],scale:1.16,tx:-.065,ty:0}},
+ research:{src:'./assets/disc-research.jpg',title:'Project Hail Mary'},
+ publications:{src:'./assets/disc-publications.jpg',title:'Reply 1988',frame:{scale:1.05,ty:-.023}},
+ memory:{src:'./assets/disc-memory.jpg',title:'Life Is Beautiful'},
+ contact:{src:'./assets/disc-contact.jpg',title:'Friends'}
+};
 const originalItems = [
  {id:'about',title:'About',subtitle:'Olivia Zhang',color:'#b4b293',ink:'#34392b',words:['About'],fontSize:144,kicker:'01 / ABOUT',heading:'About me',body:`<p class="lead">I’m Olivia (Yueshan) Zhang, a PhD student in Biostatistics at UC Berkeley.</p><p class="body-copy">Friends call me Dejiu (得九), a play on <span class="nowrap">“三三得九”</span>, the Chinese way of saying <span class="nowrap">3 × 3 = 9</span>. I earned my B.S. from the School of Mathematical Sciences at Nankai University and was a visiting student at UC Berkeley in 2025. My advisor is ${wang}.</p><p class="body-copy">I’m interested in causal inference, AI for public health, and new tools that make research more accessible.</p><div class="inline-links">${link('https://dejiu-zhang.github.io/cv.pdf','Curriculum vitae')}</div>`},
  {id:'research',title:'Research',subtitle:'Causality & public health',color:'#d4d3c9',ink:'#30332e',words:['Research'],fontSize:116,kicker:'02 / RESEARCH',heading:'Research',body:`<p class="lead">Statistics, causal inference, and AI for public health.</p><div class="entry"><span class="entry-index">01</span><div><h2>Causal inference</h2><p>I study how policies shape real-world behavior. My work on New York City’s congestion charge estimates its effects on ride-hailing and subway ridership using high-frequency panel data and a quasi-experimental design.</p><p class="entry-note">With ${wu}.</p></div></div><div class="entry"><span class="entry-index">02</span><div><h2>AI for public health</h2><p>I build and evaluate survey-anchored adolescent digital twins, combining language models with narrative memory. This work examines where these models succeed, where they fail, and whether they can reproduce findings from adolescent randomized trials.</p><p class="entry-note">With ${wang}.</p></div></div>`},
