@@ -24,7 +24,7 @@ renderer.toneMappingExposure=1.1;
 $('#scene').appendChild(renderer.domElement);
 RectAreaLightUniformsLib.init();
 const scene=new THREE.Scene();
-scene.fog=new THREE.Fog('#f3f3f1',7,14);
+scene.fog=new THREE.Fog('#ffffff',7,14);
 const camera=new THREE.PerspectiveCamera(40,1,.1,100);camera.position.z=4.4;
 const gallery=new THREE.Group();gallery.rotation.set(-Math.PI/6,-Math.PI/6,0);gallery.scale.setScalar(1.08);scene.add(gallery);
 scene.add(new THREE.AmbientLight('#ffffff',.45));
