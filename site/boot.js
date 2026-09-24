@@ -78,7 +78,7 @@ async function finish(){
 loader.querySelector('.load-retry').onclick=()=>location.reload();
 frame=requestAnimationFrame(paint);
 try{
- app=await deadline(import('./app.js?v=disc-20260924c'),25000,'site');
+ app=await deadline(import('./app.js?v=detent-20260924d'),25000,'site');
  sceneAt=performance.now();target=.18;
  await loadPhotos();complete=true;loader.dataset.state='loaded';
 }catch(e){

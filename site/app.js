@@ -127,7 +127,7 @@ setDock(0);
 function dockPose(){const halfH=Math.tan(THREE.MathUtils.degToRad(20))*4.4,unit=2*halfH/height,cx=mobile?36:width*.04+20,cy=mobile?30:34,radius=18;return {p:new THREE.Vector3((cx-width/2)*unit,(height/2-cy)*unit,0),q:new THREE.Quaternion().setFromEuler(new THREE.Euler(.12,-.18,0)),scale:radius*unit,cx,cy,radius};}
 function resize(){width=document.documentElement.clientWidth;height=innerHeight;mobile=width<768;renderer.setSize(width,height);camera.aspect=width/height;camera.updateProjectionMatrix();const projection=Math.tan(THREE.MathUtils.degToRad(20))*width/height;gallery.scale.setScalar(mobile?clamp(4.4*projection/(2.2-.5*projection),.3,.64):1.08);const d=dockPose(),hitRadius=Math.max(22,d.radius);dockReturn.style.cssText=`left:${d.cx-hitRadius}px;top:${d.cy-hitRadius}px;width:${hitRadius*2}px;height:${hitRadius*2}px;`;}
 new ResizeObserver(resize).observe(document.documentElement);window.addEventListener('resize',resize);resize();
-function scrollToY(y,immediate=false){if(smoothScroll)smoothScroll.scrollTo(y,{duration:1.35,lerp:undefined,immediate});else window.scrollTo({top:y,behavior:'instant'});}
+function scrollToY(y,immediate=false,duration=1.35){if(smoothScroll)smoothScroll.scrollTo(y,{duration,lerp:undefined,immediate});else window.scrollTo({top:y,behavior:'instant'});}
 function navigate(index){scrollToY(intro.offsetTop+index/span*(intro.offsetHeight-height));}
 function sectionY(index){const s=document.getElementById(items[index].id);return s.offsetTop+(items[index].id==='contact'?s.offsetHeight-height: -95);}
 function clearFlight(){if(flight){scene.remove(flight.group);flight=null;}clearTimeout(flightTimer);dockReturn.disabled=false;document.body.classList.remove('disc-flying');}
@@ -153,28 +153,53 @@ root.addEventListener('pointerdown',e=>{if(e.button!==0||flight||e.target.closes
 root.addEventListener('pointerup',e=>{const press=down;down=null;if(press&&Math.hypot(e.clientX-press.x,e.clientY-press.y)<7&&press.i>=0)openSection(press.i);});
 root.addEventListener('pointercancel',()=>down=null);root.addEventListener('pointerleave',()=>{hover=-1;down=null;galleryMouse=null;});
 root.addEventListener('keydown',e=>{if(e.target!==root)return;if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();navigate(clamp(current+(e.key==='ArrowRight'?1:-1),0,total-1));}else if(e.key==='Enter'){e.preventDefault();openSection(current);}});
-// Sideways gestures move the gallery as well: swiping left advances like scrolling down, swiping right goes back.
+// The gallery scrolls freely, then settles like a detent: once movement stops it always comes to rest on a disc,
+// leaning toward the direction of travel. Past the last disc it settles into About instead of halfway.
 const inGallery=()=>entered&&!reader.isOpen&&!flight&&scrollY<intro.offsetTop+intro.offsetHeight-height;
-// Lenis reads horizontal wheel deltas as scroll only while the gallery is on screen; elsewhere sideways swipes stay inert.
+const discStep=()=>(intro.offsetHeight-height)/span;
+const discAt=()=>(scrollY-intro.offsetTop)/discStep();
+let lastInput=0,travel=0,lastY=scrollY,swipe=null,snapTimer=0,snapping=0;
+function settleTo(dir){
+ if(!inGallery()||swipe)return;
+ const at=discAt();let target=dir>0?Math.floor(at+.85):dir<0?Math.ceil(at-.85):Math.round(at);
+ if(dir<0)target=Math.min(target,total-1);
+ if(target>total-1){snapping=performance.now();scrollToY(sectionY(0),false,1);return;}
+ target=clamp(target,0,total-1);
+ if(Math.abs(at-target)<.01)return;
+ snapping=performance.now();scrollToY(intro.offsetTop+target*discStep(),false,.55);
+}
+function queueSettle(){clearTimeout(snapTimer);snapTimer=setTimeout(()=>{if(performance.now()-lastInput>=150&&(!smoothScroll||Math.abs(smoothScroll.velocity||0)<.5))settleTo(travel);else queueSettle();},160);}
+// Sideways wheel and trackpad swipes scroll the gallery too (swipe left to advance), only while it is on screen.
 addEventListener('wheel',e=>{
  const sideways=!e.ctrlKey&&Math.abs(e.deltaX)>Math.abs(e.deltaY)&&inGallery();
+ if(inGallery()){lastInput=performance.now();queueSettle();}
  if(smoothScroll){smoothScroll.options.gestureOrientation=sideways?'both':'vertical';return;}
  if(sideways){e.preventDefault();window.scrollBy(0,e.deltaMode===1?e.deltaX*16:e.deltaX);}
 },{passive:false,capture:true});
-let swipe=null;
-root.addEventListener('touchstart',e=>{if(e.touches.length!==1||!inGallery()){swipe=null;return;}const t=e.touches[0];swipe={x:t.clientX,y:t.clientY,lastX:t.clientX,axis:null,from:scrollY};},{passive:true});
+addEventListener('scroll',()=>{
+ const y=scrollY;if(y!==lastY&&performance.now()-snapping>700)travel=Math.sign(y-lastY);lastY=y;
+ if(inGallery()&&performance.now()-snapping>700)queueSettle();
+},{passive:true});
+// Touch: vertical swipes keep the phone's own momentum and settle afterwards; sideways swipes follow the finger
+// and a quick flick carries on past several discs before settling.
+root.addEventListener('touchstart',e=>{if(e.touches.length!==1||!inGallery()){swipe=null;return;}const t=e.touches[0];swipe={x:t.clientX,y:t.clientY,d:0,axis:null,from:scrollY,t:performance.now(),v:0,lx:t.clientX,lt:performance.now()};},{passive:true});
 root.addEventListener('touchmove',e=>{
  if(!swipe)return;const t=e.touches[0],dx=t.clientX-swipe.x,dy=t.clientY-swipe.y;
  if(!swipe.axis){if(Math.hypot(dx,dy)<8)return;swipe.axis=Math.abs(dx)>Math.abs(dy)?'x':'y';}
  if(swipe.axis!=='x')return;
- e.preventDefault();swipe.lastX=t.clientX;window.scrollTo(0,swipe.from-dx*1.6);
+ e.preventDefault();const now=performance.now();swipe.v=(t.clientX-swipe.lx)/Math.max(1,now-swipe.lt);swipe.lx=t.clientX;swipe.lt=now;swipe.d=dx;
+ window.scrollTo(0,swipe.from-dx*1.6);
 },{passive:false});
-root.addEventListener('touchend',()=>{
- if(swipe?.axis==='x'){const dx=swipe.lastX-swipe.x,at=(scrollY-intro.offsetTop)/((intro.offsetHeight-height)/span);
-  navigate(clamp(Math.abs(dx)<30?Math.round(at):dx<0?Math.ceil(at-.05):Math.floor(at+.05),0,total-1));}
- swipe=null;
-});
-root.addEventListener('touchcancel',()=>swipe=null);
+function endSwipe(){
+ const s=swipe;swipe=null;if(!s)return;lastInput=performance.now();
+ if(s.axis!=='x'){queueSettle();return;}
+ const at=discAt(),carry=-s.v*1.6*260/discStep(),dir=Math.sign(-s.d)||0;
+ let target=dir>0?Math.floor(at+carry+.85):dir<0?Math.ceil(at+carry-.85):Math.round(at);
+ if(dir<0)target=Math.min(target,total-1);
+ snapping=performance.now();
+ if(target>total-1)scrollToY(sectionY(0),false,1);else scrollToY(intro.offsetTop+clamp(target,0,total-1)*discStep(),false,.6);
+}
+root.addEventListener('touchend',endSwipe);root.addEventListener('touchcancel',endSwipe);
 function render(now){
  requestAnimationFrame(render);smoothScroll?.raf(now);if(document.hidden){lastTime=now;return;}const dt=Math.min(.05,(now-lastTime)/1000);lastTime=now;
  const rect=root.getBoundingClientRect(),target=entered?clamp(scrollY/(intro.offsetHeight-height)*span,0,span):0;position+=(target-position)*(reduced.matches?1:1-Math.exp(-dt*9));current=clamp(Math.round(position),0,total-1);root.dataset.activeIndex=current;root.dataset.position=position.toFixed(3);
