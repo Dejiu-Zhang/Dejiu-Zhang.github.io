@@ -381,7 +381,7 @@
         else if (a === "undo") {
           for (var k = arr.length - 1; k >= 0; k--) if (arr[k].e && !TOOLS[arr[k].tl].laser) { var id = arr[k].s; remove(i, [id]); send({ k: "ink", o: "d", i: i, ids: [id] }); persist(); break; }
         }
-        paint();
+        paint(); b.blur();
       });
       paint();
 
@@ -531,7 +531,7 @@
       if (role === "presenter" && host.surface) {
         ui.pill = el("button", "sl-ui sl-pill", '<span class="sl-dot"></span><span></span>'); ui.pill.type = "button";
         ui.pillText = ui.pill.lastChild; host.surface.appendChild(ui.pill);
-        ui.pill.addEventListener("click", function () { togglePanel(); });
+        ui.pill.addEventListener("click", function () { ui.pill.blur(); togglePanel(); });
       } else {
         ui.corner = el("div", "sl-ui sl-corner", '<span class="sl-dot"></span>'); ui.corner.setAttribute("data-s", "?");
         document.body.appendChild(ui.corner);

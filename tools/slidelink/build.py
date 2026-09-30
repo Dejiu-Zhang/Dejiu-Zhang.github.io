@@ -4,7 +4,7 @@
 Usage: build.py DECK.html PRESENTER.html OUT_DIR --deck-id some-id
 Works on the two-file layout used here (deck: .slide-wrap / body.projector; presenter: #stage .pv-slide).
 """
-import argparse, pathlib, sys
+import argparse, pathlib, re, sys
 
 HERE = pathlib.Path(__file__).parent
 
@@ -13,6 +13,16 @@ def once(s, old, new, what):
     if s.count(old) != 1:
         sys.exit(f"cannot patch {what}: expected exactly one match, found {s.count(old)}")
     return s.replace(old, new)
+
+
+def noindex(html, what):
+    """Ask search engines not to index the page (talk pages live at unlisted addresses)."""
+    if re.search(r'<meta[^>]+name="robots"', html, flags=re.I):
+        return html
+    out, n = re.subn(r'(<meta\s+charset="?utf-8"?\s*/?>)', r'\1<meta name="robots" content="noindex, nofollow">', html, count=1, flags=re.I)
+    if n != 1:
+        sys.exit(f'cannot patch {what}: no <meta charset> tag found')
+    return out
 
 
 def inject(html, role, deck_id, module):
@@ -50,9 +60,7 @@ def main():
 
   layout();
   var h = location.hash.replace(/^#/, "");''', 'deck init')
-    if 'name="robots"' not in d:
-        d = once(d, '<meta name="viewport" content="width=device-width, initial-scale=1">',
-                 '<meta name="viewport" content="width=device-width, initial-scale=1">\n<meta name="robots" content="noindex, nofollow">', 'deck meta')
+    d = noindex(d, 'deck')
     d = inject(d, 'screen', a.deck_id, module)
     (out / pathlib.Path(a.deck).name).write_text(d, encoding='utf-8')
 
@@ -74,8 +82,7 @@ def main():
   };
   onResize(); show(cur);
 })();''', 'presenter init')
-    p = once(p, '<meta name="apple-mobile-web-app-capable" content="yes">',
-             '<meta name="apple-mobile-web-app-capable" content="yes">\n<meta name="robots" content="noindex, nofollow">', 'presenter meta')
+    p = noindex(p, 'presenter')
     p = inject(p, 'presenter', a.deck_id, module)
     (out / pathlib.Path(a.presenter).name).write_text(p, encoding='utf-8')
     print('wrote', *(str(x) for x in sorted(out.glob('*.html'))))
