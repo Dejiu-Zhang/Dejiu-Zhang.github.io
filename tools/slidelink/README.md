@@ -30,11 +30,15 @@ On the iPad:
 | --- | --- |
 | Pencil on the slide | draws with the selected tool |
 | Finger tap left / right, swipe | previous / next page |
-| Colour dots, yellow bar | pens, highlighter |
-| Red dot with halo | laser pointer (fades after you lift) |
-| Erase / Undo / Clear | remove a stroke by touching it / remove the last stroke / wipe this slide |
+| Three colour dots | red, blue, black pen |
+| Swoosh button | pressure on: the line gets thicker as you press. Off: even width |
+| Black dot | pen size, four steps (tap to cycle). Also sets the highlighter width |
+| Yellow bar, red dot with halo | highlighter, laser pointer (fades after you lift) |
+| Eraser | touch a stroke to remove it |
+| Dashed rectangle, dashed loop | select strokes with a box or a lasso, then drag inside the box to move them. A stroke is picked when at least half of it is inside |
+| Arrow, bin | undo the last stroke; clear the slide (with a selection: only the selection) |
 | Finger | let a finger (or mouse) draw too |
-| Status pill, top left | green: projector linked, with the delay. Amber: projector not there or on another slide. Red: offline. Tap it for details, the room code, and **Pause sync** (look ahead in private) |
+| Status pill, top left | green: projector linked, with the delay. Amber: projector not there, on another slide, or running an older version (reload it). Red: offline. Tap it for details, the room code, and **Pause sync** (look ahead in private) |
 
 On the laptop everything works as before (arrow keys, click, F, P, Esc). Press `L` for the same status panel.
 If the network drops, the laptop keyboard still turns pages, and both sides catch up when it returns.
@@ -71,5 +75,7 @@ whole (fixed design size plus CSS transform), not reflow, or ink will not line u
 
 - Public relays come with no guarantee. Three are used in parallel so one failing does not matter.
   To use your own, add `?sl_relays=wss://host:port/path` or pass `relays` to `SlideLink.start`.
+- Stroke outlines are computed with [perfect-freehand](https://github.com/steveruizok/perfect-freehand) (MIT), bundled inside `slidelink.js`.
+- Both pages must run the same version of the module. After an update, reload both.
 - Ink lives in the presenter tab. It survives a reload of that tab, not closing it.
 - Both pages must show the same deck (same slide count and order).
