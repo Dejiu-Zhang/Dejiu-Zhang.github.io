@@ -70,11 +70,12 @@
     return out;
   }
   function Relay(cfg, topic, onMsg, onChange) {
-    var self = this, ws = null, buf = new Uint8Array(0), retry = 0, timer = null, ping = null, stopped = false;
+    var self = this, ws = null, buf = new Uint8Array(0), retry = 0, timer = null, guard = null, ping = null, stopped = false;
     self.name = cfg.name || cfg.url.replace(/^wss?:\/\//, ""); self.up = false; self.lastRx = 0;
+    self.pending = 0;                       /* time of the oldest send that has had no traffic back yet (0 = none) */
     function setUp(v) { if (self.up !== v) { self.up = v; onChange(self); } }
     function drop() {
-      clearInterval(ping);
+      clearInterval(ping); clearTimeout(guard); self.pending = 0;
       if (ws) { var old = ws; ws = null; old.onopen = old.onmessage = old.onclose = old.onerror = null; try { old.close(); } catch (e) {} }
       setUp(false);
     }
@@ -85,12 +86,13 @@
       var sock;
       try { sock = ws = new WebSocket(cfg.url, "mqtt"); } catch (e) { return again(); }
       sock.binaryType = "arraybuffer"; buf = new Uint8Array(0);
+      guard = setTimeout(function () { if (sock === ws && !self.up) { drop(); again(); } }, 8000);   /* a connection that never completes */
       sock.onopen = function () {
         var vh = new Uint8Array([4, 2, 0, 30]), parts = [mqStr("MQTT"), vh, mqStr("sl" + rid(12))];
         if (cfg.user) { vh[1] |= 0xC0; parts.push(mqStr(cfg.user), mqStr(cfg.pass || "")); }
         sock.send(mqPacket(0x10, parts));
       };
-      sock.onmessage = function (ev) { self.lastRx = Date.now(); feed(new Uint8Array(ev.data)); };
+      sock.onmessage = function (ev) { self.lastRx = Date.now(); self.pending = 0; feed(new Uint8Array(ev.data)); };
       sock.onclose = sock.onerror = function () { if (sock === ws) { drop(); again(); } };
     }
     function feed(chunk) {
@@ -111,11 +113,12 @@
         if (body[1] !== 0) { drop(); again(); return; }
         ws.send(mqPacket(0x82, [new Uint8Array([0, 1]), mqStr(topic), new Uint8Array([0])]));
       } else if (type === 9) {                /* SUBACK */
-        retry = 0; setUp(true);
+        retry = 0; self.connects = (self.connects || 0) + 1; setUp(true);
         clearInterval(ping);
         ping = setInterval(function () {
           if (!ws || ws.readyState !== 1) return;
-          if (Date.now() - self.lastRx > 40000) { connect(); return; }
+          if (self.pending && Date.now() - self.pending > 9000) { connect(); return; }
+          if (!self.pending) self.pending = Date.now();
           ws.send(new Uint8Array([0xC0, 0]));
         }, 12000);
       } else if (type === 3) {                /* PUBLISH */
@@ -125,10 +128,21 @@
     }
     self.send = function (payload) {
       if (!self.up || !ws || ws.readyState !== 1) return false;
-      try { ws.send(mqPacket(0x30, [mqStr(topic), payload])); return true; } catch (e) { return false; }
+      try { ws.send(mqPacket(0x30, [mqStr(topic), payload])); if (!self.pending) self.pending = Date.now(); return true; } catch (e) { return false; }
     };
-    /* called when the page becomes visible again or the network returns */
-    self.kick = function () { if (stopped) return; if (!self.up || Date.now() - self.lastRx > 8000) { retry = 0; connect(); } };
+    /* A relay echoes our own messages back, so a send that stays unanswered means the socket is dead.
+       This is judged by "sent and heard nothing", never by the clock alone, so a throttled background tab does not reconnect for no reason. */
+    self.stale = function (ms) { return self.up && self.pending && Date.now() - self.pending > ms; };
+    self.kick = function () { if (stopped) return; if (!self.up || self.stale(8000)) { retry = 0; connect(); } };
+    /* called when the page becomes visible again or the network returns: ask for a sign of life, reconnect if none comes */
+    self.probe = function () {
+      if (stopped) return;
+      if (!self.up || !ws || ws.readyState !== 1) { retry = 0; connect(); return; }
+      var sock = ws;
+      if (!self.pending) self.pending = Date.now();
+      try { sock.send(new Uint8Array([0xC0, 0])); } catch (e) {}
+      setTimeout(function () { if (sock === ws && self.stale(2500)) { retry = 0; connect(); } }, 3000);
+    };
     self.stop = function () { stopped = true; clearTimeout(timer); drop(); };
     connect();
   }
@@ -584,16 +598,16 @@
       setInterval(function () {
         if (!joined) return;
         var now = Date.now();
-        relays.forEach(function (r) { if (r.up && r.lastRx && now - r.lastRx > 9000) r.kick(); });
+        relays.forEach(function (r) { if (r.stale(9000)) r.kick(); });
         if (anyUp() || bc) send(stateMsg("hb"));
       }, HB_MS);
-      function kick() { relays.forEach(function (r) { r.kick(); }); }
+      function kick() { relays.forEach(function (r) { r.probe(); }); }
       global.addEventListener("online", kick);
       document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible") { kick(); if (joined) send(stateMsg("hb")); } });
       refresh();
     }).catch(function (e) { fatal = "Sync error"; refresh(); if (global.console) console.warn("SlideLink", e); });
 
-    return { moved: moved, pause: setPaused, status: function () { return status()[1]; }, state: function () { return { room: !!room, topic: topic, joined: joined, slide: state.i, relays: relays.map(function (r) { return { name: r.name, up: r.up }; }), rtt: rtt, ink: ink }; } };
+    return global.SlideLink.link = { moved: moved, pause: setPaused, status: function () { return status()[1]; }, state: function () { return { room: !!room, topic: topic, joined: joined, slide: state.i, relays: relays.map(function (r) { return { name: r.name, up: r.up, connects: r.connects }; }), rtt: rtt, ink: ink }; } };
   }
 
   global.SlideLink = { version: "1.0", start: start };
